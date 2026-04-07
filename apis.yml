@@ -1,7 +1,12 @@
 aid: carrier-global
-url: https://raw.githubusercontent.com/api-evangelist/carrier-global/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/carrier-global/refs/heads/main/apis.yml
 modified: '2026-03-21'
 apis: []
 common:
   - type: Website
     url: https://www.carrier-global.com
+description: >-
+  Carrier Global is a global provider of healthy, safe, sustainable, and intelligent
+  building and cold chain solutions including HVAC, refrigeration, fire, security,
+  and building automation technologies.
