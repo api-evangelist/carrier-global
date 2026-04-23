@@ -1,0 +1,78 @@
+extends:
+  - spectral:oas
+
+rules:
+  carrier-info-title:
+    description: Carrier API info.title SHOULD end with "API".
+    given: $.info
+    severity: warn
+    then:
+      field: title
+      function: pattern
+      functionOptions:
+        match: ".*API$"
+
+  carrier-info-version:
+    description: Carrier APIs MUST declare a semantic version.
+    given: $.info
+    severity: error
+    then:
+      field: version
+      function: pattern
+      functionOptions:
+        match: "^\\d+\\.\\d+\\.\\d+(-.*)?$"
+
+  carrier-server-basepath-versioned:
+    description: Carrier API server URL should include a /vN version segment (Lynx Fleet uses /v1).
+    given: $.servers[*]
+    severity: warn
+    then:
+      field: url
+      function: pattern
+      functionOptions:
+        match: ".*/v\\d+.*"
+
+  carrier-security-required:
+    description: Carrier APIs must declare OAuth2 or API key security (Lynx Fleet uses subscription keys).
+    given: $.components.securitySchemes
+    severity: error
+    then:
+      function: truthy
+
+  carrier-error-response-standard:
+    description: Carrier operations should declare a standard 400 error response.
+    given: $.paths[*][*].responses
+    severity: warn
+    then:
+      field: "400"
+      function: truthy
+
+  carrier-asset-schema:
+    description: Lynx Fleet APIs that return assets should reference a common Asset schema.
+    given: $.components.schemas.Asset
+    severity: info
+    then:
+      function: truthy
+
+  carrier-alarm-schema:
+    description: Lynx Fleet APIs that return alarms should reference a common Alarm schema.
+    given: $.components.schemas.Alarm
+    severity: info
+    then:
+      function: truthy
+
+  carrier-tag-descriptions:
+    description: Each Carrier tag should carry a description.
+    given: $.tags[*]
+    severity: warn
+    then:
+      field: description
+      function: truthy
+
+  carrier-operation-summary:
+    description: Each Carrier operation should have a summary.
+    given: $.paths[*][get,post,put,delete,patch]
+    severity: warn
+    then:
+      field: summary
+      function: truthy

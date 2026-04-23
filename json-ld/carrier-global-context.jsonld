@@ -1,0 +1,159 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "carrier": "https://carrier.com/vocab#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "geo": "http://www.opengis.net/ont/geosparql#",
+
+    "Asset": {
+      "@id": "carrier:Asset",
+      "@context": {
+        "assetId": "schema:identifier",
+        "vin": "carrier:vin",
+        "make": "schema:brand",
+        "model": "schema:model",
+        "tru": {
+          "@id": "carrier:tru",
+          "@type": "@id"
+        },
+        "location": {
+          "@id": "schema:geo",
+          "@type": "@id"
+        }
+      }
+    },
+
+    "TRU": {
+      "@id": "carrier:TRU",
+      "@context": {
+        "truId": "schema:identifier",
+        "serialNumber": "schema:serialNumber",
+        "fuelType": "carrier:fuelType",
+        "compartments": {
+          "@id": "carrier:compartments",
+          "@container": "@list"
+        }
+      }
+    },
+
+    "Compartment": {
+      "@id": "carrier:Compartment",
+      "@context": {
+        "compartmentId": "schema:identifier",
+        "setpointC": {
+          "@id": "carrier:setpointC",
+          "@type": "xsd:decimal"
+        },
+        "returnAirC": {
+          "@id": "carrier:returnAirC",
+          "@type": "xsd:decimal"
+        },
+        "supplyAirC": {
+          "@id": "carrier:supplyAirC",
+          "@type": "xsd:decimal"
+        }
+      }
+    },
+
+    "Alarm": {
+      "@id": "carrier:Alarm",
+      "@context": {
+        "alarmId": "schema:identifier",
+        "code": "carrier:alarmCode",
+        "severity": "carrier:severity",
+        "raisedAt": {
+          "@id": "carrier:raisedAt",
+          "@type": "xsd:dateTime"
+        },
+        "clearedAt": {
+          "@id": "carrier:clearedAt",
+          "@type": "xsd:dateTime"
+        }
+      }
+    },
+
+    "Trip": {
+      "@id": "carrier:Trip",
+      "@context": {
+        "tripId": "schema:identifier",
+        "startedAt": {
+          "@id": "schema:startTime",
+          "@type": "xsd:dateTime"
+        },
+        "endedAt": {
+          "@id": "schema:endTime",
+          "@type": "xsd:dateTime"
+        },
+        "route": "schema:itinerary"
+      }
+    },
+
+    "Geofence": {
+      "@id": "carrier:Geofence",
+      "@context": {
+        "geofenceId": "schema:identifier",
+        "shape": "schema:geo",
+        "name": "schema:name"
+      }
+    },
+
+    "Command": {
+      "@id": "carrier:Command",
+      "@context": {
+        "commandId": "schema:identifier",
+        "action": "carrier:action",
+        "issuedAt": {
+          "@id": "carrier:issuedAt",
+          "@type": "xsd:dateTime"
+        },
+        "status": "carrier:commandStatus"
+      }
+    },
+
+    "Building": {
+      "@id": "carrier:Building",
+      "@context": {
+        "buildingId": "schema:identifier",
+        "name": "schema:name",
+        "address": "schema:address",
+        "squareFeet": {
+          "@id": "schema:floorSize",
+          "@type": "xsd:decimal"
+        }
+      }
+    },
+
+    "Space": {
+      "@id": "carrier:Space",
+      "@context": {
+        "spaceId": "schema:identifier",
+        "building": {
+          "@id": "carrier:building",
+          "@type": "@id"
+        },
+        "iaqScore": {
+          "@id": "carrier:iaqScore",
+          "@type": "xsd:decimal"
+        },
+        "co2Ppm": {
+          "@id": "carrier:co2Ppm",
+          "@type": "xsd:decimal"
+        },
+        "occupancy": {
+          "@id": "carrier:occupancy",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "EquipmentUnit": {
+      "@id": "carrier:EquipmentUnit",
+      "@context": {
+        "equipmentId": "schema:identifier",
+        "equipmentType": "carrier:equipmentType",
+        "status": "carrier:equipmentStatus"
+      }
+    }
+  }
+}

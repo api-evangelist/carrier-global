@@ -1,0 +1,62 @@
+vocabulary: carrier-global
+description: >-
+  Controlled vocabulary for Carrier Global's Lynx Fleet, Abound, and building
+  automation APIs. Defines the core concepts shared across Carrier's telematics,
+  cold-chain, and building-intelligence surfaces.
+version: '1.0.0'
+concepts:
+  - term: Asset
+    definition: >-
+      A tracked physical unit in the Lynx Fleet platform — typically a trailer,
+      truck, or container equipped with a transport refrigeration unit (TRU).
+  - term: TRU
+    definition: >-
+      A Transport Refrigeration Unit — the diesel or electric refrigeration
+      device attached to a trailer, truck, or container whose state is
+      telemetered through Lynx.
+  - term: Setpoint
+    definition: >-
+      A desired target temperature (or other parameter) commanded to a
+      refrigeration unit for a specific compartment.
+  - term: Compartment
+    definition: >-
+      A temperature-controlled zone within a multi-temp TRU; independently
+      set-pointable and monitorable.
+  - term: Alarm
+    definition: >-
+      A discrete fault, warning, or condition reported by a TRU or telematics
+      device (e.g. high temperature, door open, low fuel).
+  - term: Trip
+    definition: >-
+      A bounded journey segment of an asset with start, end, route, and
+      cold-chain compliance record.
+  - term: Geofence
+    definition: >-
+      A geographic boundary used to generate entry/exit events for assets.
+  - term: Command
+    definition: >-
+      A two-way instruction issued to a TRU (e.g. start, stop, change setpoint)
+      through the Lynx control API.
+  - term: Building
+    definition: >-
+      A facility monitored by Abound or i-Vu with associated HVAC equipment,
+      sensors, and indoor-environmental-quality metrics.
+  - term: Space
+    definition: >-
+      A zone inside a building (floor, suite, room) with its own HVAC control
+      and environmental readings.
+  - term: EquipmentUnit
+    definition: >-
+      A chiller, air handler, rooftop unit, or other HVAC asset monitored via
+      i-Vu or CCN.
+mappings:
+  - term: Asset
+    schema_org: schema:Vehicle
+  - term: Geofence
+    schema_org: schema:GeoShape
+  - term: Alarm
+    schema_org: schema:AlertStatus
+  - term: Building
+    schema_org: schema:Place
+  - term: Trip
+    schema_org: schema:Trip
