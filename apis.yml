@@ -11,7 +11,7 @@ description: >-
 type: Index
 position: Provider
 access: Partner
-image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - HVAC
   - Cold Chain
