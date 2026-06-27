@@ -137,7 +137,7 @@ common:
     url: https://careers.corporate.carrier.com
   - type: Contact
     url: https://www.corporate.carrier.com/contact-us/
-  - type: LLMsTxt
+  - type: LlmsText
     url: https://doc-api.fleet.lynx.carrier.io/llms.txt
 maintainers:
   - FN: Kin Lane
