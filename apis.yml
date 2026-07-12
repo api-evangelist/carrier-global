@@ -111,6 +111,8 @@ apis:
       - type: Documentation
         url: https://www.carrier.com/residential/en/us/smart-thermostats/smarthome-app/
 common:
+  - type: DomainSecurity
+    url: security/carrier-global-domain-security.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/carrier
   - type: Website
