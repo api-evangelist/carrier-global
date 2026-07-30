@@ -9,9 +9,21 @@ description: >-
   Carrier Comfort Network for commercial building automation, and the Carrier
   SmartHome app for residential smart thermostats.
 type: Index
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source:
+  - plans
+  generated: '2026-07-22'
+  method: derived
 position: Provider
 access: Partner
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/carrier-global.png
 tags:
   - HVAC
   - Cold Chain
