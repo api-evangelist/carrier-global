@@ -1,0 +1,227 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://api.portal.fleet.lynx.carrier.io/public/graphql (getPublicProductInfo →
+  guide), cross-checked against openapi/carrier-global-lynx-fleet-api-openapi.yaml,
+  openapi/carrier-global-lynx-2way-command-api-openapi.yaml and
+  openapi/carrier-global-lynx-container-api-openapi.yaml
+docs: https://doc-api.fleet.lynx.carrier.io/api-documentation
+provider: Carrier Global
+providerId: carrier-global
+scope: >-
+  The three published Carrier LYNX contracts (Lynx Fleet Pull API, 2-way command API,
+  Container API). i-Vu, Carrier Comfort Network, Abound and SmartHome publish no
+  contract, so nothing here applies to them.
+
+auth_style:
+  mechanism: api-key-header
+  header: x-lynx-api-key
+  applied: every operation, via a root-level security requirement
+  see: authentication/carrier-global-authentication.yml
+
+idempotency:
+  supported: false
+  coverage: none
+  mechanism: null
+  header: null
+  retention: null
+  evidence: >-
+    No Idempotency-Key header, no request-id/dedupe parameter and no replay-protection
+    language appears anywhere in the three contracts or in the published integration
+    guide. Grepped all three OpenAPI documents for /idempoten/i: zero matches.
+  note: >-
+    This matters more here than on a typical read API. The 2-way command surface
+    (POST /v1/send-commands) actuates physical refrigeration equipment — setpoints,
+    defrost initiation, TRU on/off, compartment toggles. The guide instructs consumers
+    to "implement a timeout strategy for API calls (e.g. 30 seconds) and a retry
+    mechanism with exponential backoff in case of transient failures" while providing
+    no deduplication key, so a retried command can double-fire. Absolute-value
+    commands (CompartmentSetpoint1/2/3, SetActiveIntelliset) are naturally idempotent
+    because they set a value; the toggle and trigger commands
+    (ToggleCompartment1/2/3, DefrostInitiation, InitiatePretrip, ClearAlarms, TRUOnOff)
+    are not.
+
+reversibility:
+  status: none
+  grade: none
+  evidence: >-
+    No cancel, revoke, undo, rollback, restore or reverse operation exists in any of
+    the three contracts, and the published guide states no reversal window. Checked
+    every operationId against the reversal vocabulary; zero matches.
+  write_surfaces:
+    - operation: send-2way-commands
+      method: POST
+      path: /v1/send-commands
+      contract: openapi/carrier-global-lynx-2way-command-api-openapi.yaml
+      consequence: >-
+        Actuates connected transport refrigeration equipment (setpoint change, defrost,
+        pre-trip, alarm clear, unit on/off, sleep mode, compartment toggle).
+      reversal_operation: null
+      reversal_window: null
+      note: >-
+        The only post-hoc facility is observation, not reversal:
+        GET /v1/check-command-status (check-2way-command-status) reports whether a sent
+        command succeeded, and GET /v1/get-commands (get-2way-commands) lists which
+        commands an asset supports. A setpoint can be re-set to its previous value by
+        issuing another command, but Carrier documents no undo, no cancellation of an
+        in-flight command and no window — so this is recorded as an absence, not as a
+        reversal path. The guide's only stated precondition is that "these commands
+        should be executed only if TRU (cooling unit) is powered on."
+    - operation: scb-ingestor-v1
+      method: POST
+      path: /v1/scb-ingestor
+      contract: openapi/carrier-global-lynx-fleet-api-openapi.yaml
+      consequence: Ingests third-party sensor data into the Lynx platform.
+      reversal_operation: null
+      reversal_window: null
+    - operation: orbcomm-ingestor-v1
+      method: POST
+      path: /v1/orbcomm-ingestor
+      contract: openapi/carrier-global-lynx-fleet-api-openapi.yaml
+      consequence: Ingests Orbcomm telematics data into the Lynx platform.
+      reversal_operation: null
+      reversal_window: null
+  read_only_posts:
+    operations:
+      - multi-asset-history-v1
+      - multi-asset-battery-history-v1
+    note: >-
+      These use POST only to carry a list of asset ids in a request body; they read and
+      have no consequence to reverse.
+
+dry_run_mode:
+  supported: false
+  evidence: >-
+    No sandbox mode flag, no test/live key distinction and no simulate/preview
+    parameter appears in the contracts or the guide.
+
+pagination:
+  style: cursor
+  documented: true
+  request_params:
+    - name: limit
+      in: query
+      type: integer
+      default: 100
+      minimum: 1
+      maximum: 250
+      description: The number of items to return.
+    - name: nextToken
+      in: query
+      type: string
+      maxLength: 2048
+      description: A pagination token used to return a set of results.
+  response_fields:
+    - nextToken
+  ordering: >-
+    "The response of a list API represents a single page in reverse chronological
+    stream of objects. If you do not specify nextToken, you will receive the first page
+    of the stream containing the newest objects." (published guide, verbatim)
+  applies_to:
+    - asset-list-v1
+    - asset-snapshot-list-v1
+    - asset-history-list-v1
+    - asset-battery-list-v1
+    - asset-battery-history-list-v1
+  note: >-
+    The guide names AssetSnapshots and AssetBatteries as examples and says list APIs
+    "share a common structure taking at least the following parameters: limit and
+    nextToken". Page size is 100 by default.
+
+filtering:
+  style: comma-separated identifier lists on query parameters
+  params:
+    - assetIds
+    - assetNames
+    - truSerialNumbers
+    - licensePlateNumbers
+  semantics: >-
+    If none of assetIds, assetNames, truSerialNumbers or licensePlateNumbers is
+    supplied, all assets the API key is entitled to are returned.
+  limits:
+    - operation: multi-asset-history-v1
+      constraint: Query 10 assets at a time.
+    - operation: asset-history-list-v1
+      constraint: Query 1 asset per request.
+
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: true
+  note: >-
+    Assets carry customer-defined fields (CustomFieldsValues in the Asset schema);
+    these are managed in the Lynx portal, not through the public API.
+
+request_id_tracing:
+  documented: false
+  evidence: No correlation-id or request-id header is documented or declared in any contract.
+
+versioning:
+  style: path
+  current: v1
+  documented: true
+  policy: >-
+    "The API version controls the API behavior... A new version will be released if a
+    breaking change is introduced to the Lynx Fleet API."
+  backward_compatible_changes:
+    - Adding new API resources.
+    - Adding new optional request parameters to existing API methods.
+    - Adding new properties to existing API responses.
+    - Changing the order of properties in existing API responses.
+    - Changing the length or format of opaque strings, such as object IDs, error
+      messages, and other human-readable strings.
+  consumer_obligation: >-
+    "The consumer must not fail if the API response includes fields not defined in the
+    OpenAPI spec. Unknown fields must be ignored to ensure forward compatibility." The
+    guide also requires graceful handling of responses with FEWER fields than expected,
+    and of data for assets the consumer does not recognise.
+  see: lifecycle/carrier-global-lifecycle.yml
+
+error_envelope:
+  format: proprietary
+  rfc9457: false
+  media_type: application/json
+  shape:
+    message: string
+  evidence: >-
+    Every 4xx/5xx response in all three contracts resolves to a schema whose single
+    property is `message` (BadRequestError, AuthRequestError, ForbiddenRequestError,
+    TooManyRequestsError, UnexpectedError). No `type`, `title`, `status`, `detail` or
+    `instance` member; no application/problem+json media type.
+  see: errors/carrier-global-problem-types.yml
+
+rate_limit_signaling:
+  documented_limit: 500,000 API calls per month
+  exhaustion_status: 429
+  response_headers: none documented
+  retry_after: not documented
+  note: >-
+    The limit is published as a monthly call quota, not as a per-second/per-minute
+    window, and Carrier documents no X-RateLimit-*, RateLimit-* or Retry-After response
+    headers — so an agent has a number in the docs but no runtime signal. The guide's
+    remedy is client-side: exponential backoff with a 30-second timeout.
+  see: rate-limits/carrier-global-rate-limits.yml
+
+polling_guidance:
+  note: >-
+    Carrier publishes explicit cadence guidance rather than leaving it to the consumer.
+  rules:
+    - Recommended history/snapshot query duration is 30 minutes.
+    - For frequencies under 30 minutes, use the Push API (webhooks) instead of polling.
+    - Sync the asset list once a week to keep the local cache current, avoid 400-level
+      asset id errors and protect the call quota.
+    - Decouple retrieval from processing — store or queue pulled data and process it
+      asynchronously to avoid timeouts and retries.
+
+cross_links:
+  authentication: authentication/carrier-global-authentication.yml
+  errors: errors/carrier-global-problem-types.yml
+  lifecycle: lifecycle/carrier-global-lifecycle.yml
+  rate_limits: rate-limits/carrier-global-rate-limits.yml
+  events: asyncapi/carrier-global-lynx-webhooks.yml
+  data_model: data-model/carrier-global-data-model.yml
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

@@ -1,0 +1,186 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  mcp/carrier-global-mcp.yml (candidate tools), the three contracts in openapi/, and the
+  live public GraphQL surface recorded in
+  graphql/carrier-global-lynx-portal-graphql.yml
+provider: Carrier Global
+providerId: carrier-global
+purpose: >-
+  Carrier runs two machine surfaces that are NOT projections of one another: a
+  key-authenticated REST telematics API on api.fleet.lynx.carrier.io, and a GraphQL
+  backend on api.portal.fleet.lynx.carrier.io that serves the developer portal itself.
+  This file binds them so neither is silently dropped.
+surfaces:
+  openapi:
+    - file: openapi/carrier-global-lynx-fleet-api-openapi.yaml
+      server: https://api.fleet.lynx.carrier.io
+      operations: 10
+      gated: true
+      gate: x-lynx-api-key header; the host returns 401 to anonymous requests on every path
+    - file: openapi/carrier-global-lynx-2way-command-api-openapi.yaml
+      server: https://api.fleet.lynx.carrier.io/2waycmd
+      operations: 3
+      gated: true
+    - file: openapi/carrier-global-lynx-container-api-openapi.yaml
+      server: https://api.fleet.lynx.carrier.io/coa
+      operations: 3
+      gated: true
+  graphql:
+    endpoint: https://api.portal.fleet.lynx.carrier.io/public/graphql
+    gated: false
+    introspection: disabled
+    note: >-
+      Anonymous and live, but introspection is off, so the field list below is only what
+      was actually executed and observed, never a schema listing.
+  mcp:
+    url: null
+    status: none
+    note: Carrier ships no MCP server; mcp/carrier-global-mcp.yml is a candidate.
+crosswalk:
+  - tool: list_assets
+    category: assets
+    rest: [asset-list-v1]
+    binding: direct
+    confidence: high
+  - tool: get_asset_snapshots
+    category: assets
+    rest: [asset-snapshot-list-v1]
+    binding: direct
+    confidence: high
+  - tool: get_asset_history
+    category: history
+    rest: [asset-history-list-v1]
+    binding: direct
+    confidence: high
+  - tool: get_multi_asset_history
+    category: history
+    rest: [multi-asset-history-v1]
+    binding: direct
+    confidence: high
+  - tool: list_asset_batteries
+    category: battery
+    rest: [asset-battery-list-v1]
+    binding: direct
+    confidence: high
+  - tool: get_asset_battery_history
+    category: battery
+    rest: [asset-battery-history-list-v1]
+    binding: direct
+    confidence: high
+  - tool: get_multi_asset_battery_history
+    category: battery
+    rest: [multi-asset-battery-history-v1]
+    binding: direct
+    confidence: high
+  - tool: get_alarm_codes
+    category: reference
+    rest: [alarm-codes-and-descriptions-v1]
+    binding: direct
+    confidence: high
+  - tool: ingest_scb_data
+    category: ingestion
+    rest: [scb-ingestor-v1]
+    binding: direct
+    confidence: high
+  - tool: ingest_orbcomm_data
+    category: ingestion
+    rest: [orbcomm-ingestor-v1]
+    binding: direct
+    confidence: high
+  - tool: get_available_commands
+    category: commands
+    rest: [get-2way-commands]
+    binding: direct
+    confidence: high
+  - tool: send_command
+    category: commands
+    rest: [send-2way-commands]
+    binding: direct
+    confidence: high
+    note: Physical actuation. Pair with get_available_commands before and check_command_status after.
+  - tool: check_command_status
+    category: commands
+    rest: [check-2way-command-status]
+    binding: direct
+    confidence: high
+  - tool: get_container_unified_model
+    category: container
+    rest: [unified-model-v1]
+    binding: direct
+    confidence: high
+  - tool: get_container_snapshot
+    category: container
+    rest: [container-snapshot-v1]
+    binding: direct
+    confidence: high
+  - tool: get_container_history
+    category: container
+    rest: [container-asset-history-list-v1]
+    binding: direct
+    confidence: high
+graphql_only:
+  - field: getDefaultProducts
+    reason: >-
+      Portal catalogue. Lists the API products published in the Dev Portal, grouped by
+      business unit (TTI, LFC, TTA), each with id, name, apiId and description. There is
+      no REST equivalent — the only machine-readable index of Carrier's own API estate
+      lives here.
+    verified: probed 200
+  - field: getPublicApiSpecYml
+    reason: >-
+      Serves the OpenAPI document for a product as YAML. This is how the three contracts
+      in openapi/ were retrieved; no REST or static-file equivalent exists, because the
+      docs host answers every conventional spec path with an HTML shell.
+    verified: probed 200
+  - field: getPublicApiSpecJson
+    reason: Same contract as a JSON object. Declared in the portal bundle; not probed.
+    verified: declared
+  - field: getPublicProductInfo
+    reason: >-
+      Returns the contract plus the product's structured integration guide
+      (authentication, rate limiting, errors, pagination, versioning, best practices,
+      endpoint usage). The entire documentation corpus for these APIs is only reachable
+      through this field.
+    verified: probed 200
+  - field: getPrimaryProducts
+    reason: Returns an empty object anonymously; meaning not established.
+    verified: probed 200
+rest_only:
+  note: >-
+    All 16 REST operations are REST-only. The public GraphQL surface is a
+    documentation/portal plane and exposes no telematics data at all — none of the
+    assets, snapshots, history, battery, alarm, command or container operations has a
+    GraphQL equivalent on the anonymous endpoint.
+  operations:
+    - asset-list-v1
+    - asset-snapshot-list-v1
+    - asset-history-list-v1
+    - multi-asset-history-v1
+    - asset-battery-list-v1
+    - asset-battery-history-list-v1
+    - multi-asset-battery-history-v1
+    - scb-ingestor-v1
+    - orbcomm-ingestor-v1
+    - alarm-codes-and-descriptions-v1
+    - get-2way-commands
+    - send-2way-commands
+    - check-2way-command-status
+    - unified-model-v1
+    - container-snapshot-v1
+    - container-asset-history-list-v1
+coverage:
+  rest_operations: 16
+  tools_mapped: 16
+  mapped_direct: 16
+  mcp_only: 0
+  graphql_only: 5
+  rest_only: 16
+  unmapped: 0
+  note: >-
+    The two planes are disjoint: data lives in REST behind a key, discovery and
+    documentation live in GraphQL in the open. An agent needs both — GraphQL to learn
+    what exists, REST to do anything with it.
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

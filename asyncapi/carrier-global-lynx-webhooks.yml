@@ -1,0 +1,72 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://api.portal.fleet.lynx.carrier.io/public/graphql (getPublicProductInfo →
+  guide.usingTheAPIs.accessingYourData) and the polling guidance in
+  guide.usingTheAPIs.usingTheEndPoints
+docs: https://doc-api.fleet.lynx.carrier.io/api-documentation
+provider: Carrier Global
+providerId: carrier-global
+kind: webhooks
+asyncapi_published: false
+asyncapi_evidence: >-
+  No AsyncAPI document is published. /asyncapi.json and /asyncapi.yaml on
+  doc-api.fleet.lynx.carrier.io return the site's 604-byte HTML shell (HTTP 200), the
+  Dev Portal's public GraphQL backend exposes only getPublicApiSpecYml /
+  getPublicApiSpecJson (OpenAPI), and the portal's three product entries all carry REST
+  contracts. Nothing is generated here in its place.
+surface:
+  name: Lynx Push API
+  documented: true
+  transport: webhook
+  description: >-
+    Carrier documents two delivery models side by side. Verbatim: "Push API (Webhooks):
+    Get notified in real-time as events happen. With the Push API, you subscribe to
+    specific events (e.g., a container door opening, a trailer arriving at a geofence).
+    When that event occurs, our platform will instantly 'push' a notification to your
+    application's endpoint. This is ideal for time-sensitive, event-driven workflows and
+    alerts in real-time especially transporting Pharma goods and chemicals. It is also
+    the future of APIs due to being cost-effective and easy to implement."
+  positioning: >-
+    The Push API is the documented answer to sub-30-minute data needs. Three separate
+    endpoint notes in the guide say the same thing: "For frequencies that are under 30
+    mins, you can use our Push API" — for asset-history-items, multi-asset-history and
+    asset-snapshots.
+events_documented:
+  note: >-
+    Carrier names event EXAMPLES in prose, not a catalog. These two are the only events
+    named anywhere in the published material; they are recorded as the provider's own
+    illustrations, not as a complete or authoritative event list.
+  examples:
+    - a container door opening
+    - a trailer arriving at a geofence
+gaps:
+  items:
+    - >-
+      No event catalog — no list of event types, no per-event payload schema, no
+      versioning statement for event payloads.
+    - >-
+      No subscription contract — no operation in any of the three OpenAPI documents
+      creates, lists, updates or deletes a webhook subscription. Subscription is
+      arranged outside the published API surface.
+    - >-
+      No delivery semantics — no signature/HMAC scheme, no retry or backoff policy, no
+      at-least-once/exactly-once statement, no replay endpoint.
+    - No endpoint registration UI or URL is published.
+  note: >-
+    The Push API is real, first-party and documented, and it is the mechanism Carrier
+    itself points integrators at — but a consumer cannot implement against it from
+    public material alone. Everything beyond "it exists and here are two example events"
+    requires the Carrier Lynx Integration Team. This is the single largest documentation
+    gap in Carrier's API surface and the highest-value thing they could publish next.
+related_pull_operations:
+  note: >-
+    The Pull operations the Push API is positioned to replace, for anyone mapping the
+    two models against each other.
+  operations:
+    - asset-history-list-v1
+    - multi-asset-history-v1
+    - asset-snapshot-list-v1
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

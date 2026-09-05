@@ -1,0 +1,445 @@
+openapi: 3.0.0
+components:
+  schemas:
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: >-
+            The request was unacceptable, often due to missing a required
+            parameter
+          example: No match found
+    AuthRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: No valid API key provided
+          example: Unauthorized
+    ForbiddenRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The API key doesn't have permissions to perform the request
+          example: Access to the requested resource is forbidden
+    TooManyRequestsError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: >-
+            Too many requests hit the API too quickly. We recommend exponential
+            backoff of your requests
+          example: Too Many Requests
+    UnexpectedError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Something went wrong on Stripe's end
+          example: Server Error
+    UnifiedModelProperty:
+      type: object
+      required:
+        - Key
+        - Name
+        - Description
+        - Type
+      description: Represents all information about asset
+      properties:
+        Key:
+          type: string
+          description: COA identifier
+          readOnly: false
+          example: p5
+        Name:
+          type: string
+          description: COA Property name
+          readOnly: false
+          example: Device name
+        Description:
+          type: string
+          description: COA Property description
+          readOnly: false
+          example: The name of the device
+        Type:
+          type: string
+          example: String
+          readOnly: false
+          description: Data type
+          enum:
+            - String
+            - Float
+            - DateTime
+            - Boolean
+            - Enum
+            - Integer
+        Unit:
+          type: string
+          example: CelciusDegrees
+          nullable: true
+          readOnly: false
+          description: Measure unit
+    UnifiedModelAlarm:
+      type: object
+      required:
+        - Key
+        - AlarmNo
+        - Description
+        - Manufacturer
+      description: Represents all information about asset
+      properties:
+        Key:
+          type: string
+          description: COA identifier
+          readOnly: false
+          example: a0
+        AlarmNo:
+          type: string
+          description: The unique alarm code
+          readOnly: false
+          example: '1'
+        Description:
+          type: string
+          description: COA Alarm description
+          readOnly: false
+          example: Supply air sensor circuit
+        Manufacturer:
+          type: string
+          example: Thermoking
+          readOnly: false
+          description: Alarm manufacturer
+    UnifiedModelList:
+      type: array
+      description: List of UnifiedModel objects
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/UnifiedModelProperty'
+          - $ref: '#/components/schemas/UnifiedModelAlarm'
+    SourceData:
+      type: object
+      required:
+        - SourceId
+        - SourceType
+        - DeviceId
+        - DeviceType
+        - Logged
+        - Properties
+        - Alarms
+      description: Represents all information about asset
+      properties:
+        SourceId:
+          type: string
+          description: Container Id
+          readOnly: false
+          example: SIMT0000047
+        SourceType:
+          type: number
+          readOnly: false
+          example: 1
+        DeviceId:
+          type: string
+          description: Container device id
+          readOnly: false
+          example: '000071413000004'
+        DeviceType:
+          type: number
+          readOnly: false
+          example: 5
+        Logged:
+          type: string
+          readOnly: false
+          format: date-time
+          example: '2020-12-08T17:54:00'
+          description: Time that the data is collected
+        Properties:
+          type: object
+          readOnly: false
+          description: Array of key value pairs of data for containerID provided
+        Alarms:
+          type: object
+          readOnly: false
+          description: Array of alarm ids with their corresponding descriptions
+    SourceDataList:
+      type: object
+      description: List of Asset history objects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceData'
+        total:
+          type: integer
+          example: 20
+          description: Total number of items that match the request
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    SourceDataHistoryList:
+      type: array
+      description: List of Asset history arrays
+      items:
+        $ref: '#/components/schemas/SourceDataList'
+  securitySchemes:
+    x-lynx-api-key:
+      type: apiKey
+      in: header
+      name: x-lynx-api-key
+info:
+  title: Carrier LYNX Developer APIs
+  description: >
+    ![](https://images.carriercms.com/image/upload/h_150,q_100,f_auto/v1573562016/common/logos/carrier-corp-logo.png
+
+    "Carrier Logo")
+
+
+
+    This is the public API for Carrier LYNX.
+
+
+    - [Terms and Conditions](https://www.carrier.com/lynx/terms-of-use)
+
+
+    **Contact Us** <br>
+
+    &nbsp;&nbsp;E-mail: <lynxfleetadmin@carrier.com> &nbsp;&nbsp; © 2021 Carrier
+  version: 1.0.0
+paths:
+  /v1/api/core2/UnifiedModel:
+    get:
+      operationId: unified-model-v1
+      description: This operation will return all assets
+      parameters:
+        - name: type
+          in: query
+          description: Unified Model type
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            enum:
+              - Properties
+              - Alarms
+            example: Alarms
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnifiedModelList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/api/core2/sourcelatestdata:
+    get:
+      operationId: container-snapshot-v1
+      description: This operation will return all assets
+      parameters:
+        - name: sourceIds
+          in: query
+          description: List of container ids (optional, comma separated, maximum 10 ids)
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            example: XCLU1933880
+        - name: sourceType
+          in: query
+          description: Source Type
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - Container
+            example: Container
+        - name: deviceType
+          in: query
+          description: example RmmW
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The numbers of items to return
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+        - name: nextToken
+          in: query
+          description: A pagination token used to return a set of results
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 2048
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceDataList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/api/core2/container-asset-history-items:
+    get:
+      operationId: container-asset-history-list-v1
+      description: This operation will return all assets
+      parameters:
+        - name: startDate
+          in: query
+          description: >-
+            Return data after this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            month
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: date-time
+            example: '2019-05-17T08:30:00Z'
+        - name: endDate
+          in: query
+          description: >-
+            Return data before this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            month
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: date-time
+            example: '2019-05-17T08:30:00Z'
+        - name: sourceIds
+          in: query
+          description: List of container ids (optional, comma separated, maximum 10 IDs)
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The numbers of items to return
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+        - name: nextToken
+          in: query
+          description: A pagination token used to return a set of results
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 2048
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceDataHistoryList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+security:
+  - x-lynx-api-key: []
+servers:
+  - url: https://api.fleet.lynx.carrier.io/coa
+    description: prod

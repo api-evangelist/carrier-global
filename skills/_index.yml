@@ -1,0 +1,49 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  openapi/carrier-global-lynx-fleet-api-openapi.yaml,
+  openapi/carrier-global-lynx-2way-command-api-openapi.yaml,
+  openapi/carrier-global-lynx-container-api-openapi.yaml,
+  conventions/carrier-global-conventions.yml, errors/carrier-global-problem-types.yml,
+  rate-limits/carrier-global-rate-limits.yml
+provider: Carrier Global
+providerId: carrier-global
+note: >-
+  Carrier publishes no Agent Skills, no AGENTS.md and no agent-facing operating
+  instructions of its own — probed 2026-09-05. These four are API Evangelist
+  generations. Every operationId, path, parameter, schema name, range and status code
+  in them was read out of the three published contracts or quoted from Carrier's own
+  integration guide; none is invented.
+skills:
+  - file: carrier-global-monitor-cold-chain.md
+    name: carrier-global-monitor-cold-chain
+    api: carrier-global:lynx-fleet-api
+    consequence: read
+    operations: [asset-list-v1, asset-snapshot-list-v1, alarm-codes-and-descriptions-v1]
+  - file: carrier-global-pull-asset-history.md
+    name: carrier-global-pull-asset-history
+    api: carrier-global:lynx-fleet-api
+    consequence: read
+    operations:
+      - asset-history-list-v1
+      - multi-asset-history-v1
+      - asset-battery-list-v1
+      - asset-battery-history-list-v1
+      - multi-asset-battery-history-v1
+  - file: carrier-global-send-refrigeration-command.md
+    name: carrier-global-send-refrigeration-command
+    api: carrier-global:lynx-2way-command-api
+    consequence: physical-actuation
+    escalation: human-confirmation-recommended
+    operations: [get-2way-commands, send-2way-commands, check-2way-command-status]
+  - file: carrier-global-container-telemetry.md
+    name: carrier-global-container-telemetry
+    api: carrier-global:lynx-container-api
+    consequence: read
+    operations: [unified-model-v1, container-snapshot-v1, container-asset-history-list-v1]
+coverage:
+  operations_total: 16
+  operations_covered: 16
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

@@ -1,0 +1,67 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  npm registry search (registry.npmjs.org/-/v1/search), PyPI JSON API, and the Lynx
+  Fleet Dev Portal / integration guide
+provider: Carrier Global
+providerId: carrier-global
+package_count: 0
+official_sdk_count: 0
+packages: []
+findings:
+  - registry: npm
+    queried:
+      - lynx fleet carrier
+      - carrier lynx
+      - lynxfleet
+      - carrier-global
+      - abound carrier
+    result: >-
+      No Carrier Global package. Every near-miss belongs to someone else: @lynx-js/*
+      is ByteDance's Lynx UI framework, @carrierllc/mcp is an MVNO/eSIM tool from
+      Lifecycle Innovations, @shipengine/connect-carrier-api is ShipStation's shipping
+      carrier API, `carrier` is a 2011 node stream line reader, and
+      @withabound/node-sdk is a tax-compliance company unrelated to Carrier Abound.
+    version: null
+    published: null
+  - registry: pypi
+    queried:
+      - lynx-fleet
+      - carrier-lynx
+      - pycarrier
+    result: All 404.
+    version: null
+    published: null
+  - registry: github
+    queried:
+      - github.com/carrier
+      - github.com/carrier-global
+      - github.com/carrierglobal
+      - github.com/lynxfleet
+    result: >-
+      All 404. github.com/carrier-io exists but is a DIFFERENT company — "Carrier", a
+      continuous-testing toolkit at getcarrier.io — and must not be attributed to
+      Carrier Global.
+    version: null
+    published: null
+  - registry: docs
+    queried:
+      - https://doc-api.fleet.lynx.carrier.io/
+      - Lynx integration guide (getPublicProductInfo)
+    result: >-
+      The guide's integration steps are entirely raw-HTTP: obtain a key, set the
+      x-lynx-api-key header, call the endpoints, poll. No client library, wrapper or
+      code sample in any language is offered, and no SDK link appears in apis.yml.
+    version: null
+    published: null
+notes: >-
+  Carrier publishes three real OpenAPI contracts and no client library in any language.
+  A generated client is straightforward from the specs in openapi/ — the contracts carry
+  operationIds, complete parameter definitions and 188 inline examples — but nothing
+  first-party exists, so no SDKs pointer is emitted. There is one third-party mention
+  worth recording: the guide says "The postman collection also contains some samples",
+  implying a Postman collection exists, but no URL for it is published anywhere public,
+  so no Postman pointer is emitted either.
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

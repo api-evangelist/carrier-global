@@ -1,0 +1,76 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://api.portal.fleet.lynx.carrier.io/public/graphql (getPublicProductInfo →
+  guide.gettingStarted.authentication), plus the securitySchemes block of all three
+  published contracts in openapi/
+docs: https://doc-api.fleet.lynx.carrier.io/api-documentation
+provider: Carrier Global
+providerId: carrier-global
+summary:
+  types:
+    - apiKey
+  api_key_in:
+    - header
+  oauth2: false
+  openid_connect: false
+  mutual_tls: false
+  note: >-
+    Every published Carrier Lynx contract authenticates the same way: a single
+    tenant-scoped API key in the x-lynx-api-key request header, applied globally via a
+    root-level security requirement. There is no OAuth surface on the API itself, so no
+    scopes/ artifact is written. The Lynx Fleet WEB portal signs users in through
+    Carrier's own Okta tenant (OIDC) — that is human SSO for the UI, not API auth, and
+    is recorded separately in well-known/.
+schemes:
+  - name: x-lynx-api-key
+    type: apiKey
+    in: header
+    parameter: x-lynx-api-key
+    applied: global
+    sources:
+      - openapi/carrier-global-lynx-fleet-api-openapi.yaml
+      - openapi/carrier-global-lynx-2way-command-api-openapi.yaml
+      - openapi/carrier-global-lynx-container-api-openapi.yaml
+    obtaining_credentials: >-
+      "Admins can obtain an API key from the account menu in the Lynx Fleet portal.
+      Click on your name in the Lynx Fleet header and select the External API Key
+      option. You could also reach out to Lynx API Support to get your API Key."
+      (published guide, verbatim)
+    rotation: >-
+      "If you suspect your API key has been compromised, request a new key from the
+      External API Key option within Lynx Fleet." (published guide, verbatim)
+    transport: >-
+      "All requests need to be made over HTTPS. Calls made over regular HTTP will fail.
+      Requests made without authentication will also fail." Best practices additionally
+      require TLS 1.2 or higher and server-certificate validation.
+    scoping: >-
+      The key is tenant-scoped: "The Lynx API Key links a tenant to assets that the
+      tenant has access to." API Configuration determines which tenants, assets and
+      data types (GPS, temperature, door-open events) a given client may read, and must
+      be in place before any call returns data.
+    failure_modes:
+      - status: 401
+        meaning: Invalid API key provided, or API key not provided
+      - status: 403
+        meaning: API Key doesn't have permission to perform requests
+identity_surfaces:
+  - name: Lynx Fleet portal SSO
+    kind: oidc
+    issuer: https://carrier.okta.com/oauth2/ausezsnschc0QFWkt4x7
+    discovery: well-known/carrier-global-okta-lynx-app-openid-configuration.json
+    applies_to: human sign-in to the Lynx Fleet portal and Dev Portal
+    applies_to_api: false
+    note: >-
+      Named as REACT_APP_OKTA_ISSUER in the Dev Portal's own published JavaScript
+      bundle. The Dev Portal integration guide also refers to signing in "using SAML
+      credentials".
+prerequisites:
+  - You must obtain a valid API key before integration; it must be included in the
+    x-lynx-api-key header of every request.
+  - Your subscription plan must support Pull API access.
+  - Outbound IPs may need whitelisting where Lynx enforces IP restrictions (documented
+    as optional, typically required in production).
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

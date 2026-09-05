@@ -1,0 +1,88 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://api.portal.fleet.lynx.carrier.io/public/graphql (getPublicProductInfo →
+  guide.gettingStarted.versioning and guide.usingTheAPIs.bestPractices), cross-checked
+  against the three contracts in openapi/
+docs: https://doc-api.fleet.lynx.carrier.io/api-documentation
+provider: Carrier Global
+providerId: carrier-global
+versioning:
+  documented: true
+  style: path-prefix
+  current_version: v1
+  spec_info_version: 1.0.0
+  policy: >-
+    "The API version controls the API behavior (for example, what properties you see in
+    responses and what parameters you're permitted to use in requests). A new version
+    will be released if a breaking change is introduced to the Lynx Fleet API."
+  backward_compatible_changes:
+    - Adding new API resources.
+    - Adding new optional request parameters to existing API methods.
+    - Adding new properties to existing API responses.
+    - Changing the order of properties in existing API responses.
+    - Changing the length or format of opaque strings, such as object IDs, error
+      messages, and other human-readable strings.
+  consumer_contract: >-
+    Carrier states the compatibility obligation on the consumer as well: unknown fields
+    in a response MUST be ignored, and a response carrying FEWER fields than expected
+    (due to data filtering or configuration) must still be processed without error.
+deprecation:
+  policy_published: false
+  sunset_header: not documented
+  deprecation_header: not documented
+  rfc8594: false
+  deprecated_operations: []
+  evidence: >-
+    No operation in any of the three contracts carries `deprecated: true`, and no
+    deprecation, sunset, end-of-life or migration policy appears in the published
+    guide. Carrier states only that a breaking change produces a new version — it does
+    not state how long the previous version keeps running, or how notice is given.
+    Recorded as an absence; no Deprecation pointer is emitted.
+status_page:
+  published: false
+  evidence:
+    - url: https://status.carrier.com
+      result: NXDOMAIN
+    - url: https://status.lynx.carrier.io
+      result: NXDOMAIN
+    - url: https://status.fleet.lynx.carrier.io
+      result: NXDOMAIN
+    - url: https://carrier.statuspage.io
+      status: 200
+      result: >-
+        Unclaimed subdomain — serves Atlassian's own Statuspage marketing page
+        ("Real-Time Incident Communication with Statuspage | Atlassian"), not a Carrier
+        status page.
+  note: >-
+    No StatusPage pointer is emitted. There is no published uptime, incident or
+    maintenance surface for any Lynx API.
+sla:
+  published: false
+  note: >-
+    The guide states support expectations for the Carrier PSIRT (48-hour receipt
+    acknowledgement for security reports) but publishes no availability or latency SLA
+    for the APIs.
+support:
+  channels:
+    - name: Lynx API Support / Carrier Lynx Integration Team
+      how: Named in the published guide as the route for API keys and for raising the
+        500,000-call monthly quota. No public ticketing URL is published.
+    - name: Lynx Fleet administrator contact
+      email: lynxfleetadmin@carrier.com
+      source: info.description of openapi/carrier-global-lynx-container-api-openapi.yaml
+    - name: Developer portal access request
+      how: >-
+        "Your company must be a current Lynx Fleet subscriber to get access to the
+        developer portal. Please contact Carrier customer support."
+      url: https://api.tta.lynxfleet.carrier.com/
+change_log:
+  published: false
+  evidence: >-
+    The Dev Portal's own navigation model (from its published bundle) has exactly three
+    sections — getting-started, using-the-apis, api-specifications. There is no
+    changelog, release-notes or what's-new section, and no dated entries appear
+    anywhere in the guide payload returned by getPublicProductInfo.
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

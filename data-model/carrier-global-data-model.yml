@@ -1,0 +1,252 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/carrier-global-lynx-fleet-api-openapi.yaml,
+  openapi/carrier-global-lynx-2way-command-api-openapi.yaml,
+  openapi/carrier-global-lynx-container-api-openapi.yaml — entity graph computed from
+  $ref edges and id-reference fields in components.schemas
+provider: Carrier Global
+providerId: carrier-global
+summary:
+  schemas_total: 71
+  schemas_lynx_fleet: 47
+  schemas_2way_command: 12
+  schemas_container: 12
+  shared_error_schemas: 5
+  root_entity: Asset
+  note: >-
+    The 5 error schemas (BadRequestError, AuthRequestError, ForbiddenRequestError,
+    TooManyRequestsError, UnexpectedError) are duplicated verbatim across all three
+    contracts rather than shared, which is why the per-contract counts sum above the
+    distinct total.
+identifiers:
+  - field: assetId
+    format: uuid
+    example: e3d4e850-28a7-4045-b5d3-bb58cad202b4
+    description: >-
+      The primary key of the whole model. An Asset is "any Carrier-managed cargo unit
+      (e.g. trailer, container) equipped with a Carrier telematics device."
+  - field: deviceId
+    description: The telematics device physically attached to an asset.
+  - field: tenantId
+    description: >-
+      The Carrier customer organisation. The API key is bound to a tenant, and the
+      tenant determines which assets are visible at all.
+  - field: commandId
+    format: uuid
+    example: 05b419f2-f064-489d-ade7-8249839a23ed
+    description: Handle for a dispatched 2-way command, used to poll its status.
+  - field: fieldId
+    description: Customer-defined custom field on an asset (CustomFieldsValues).
+  - field: macId
+    description: Identifier of a connected truck paired to a trailer asset.
+  - field: SourceId
+    description: Container-API source identifier (SourceData).
+  - field: CtuId
+    description: Container/TRU unit identifier carried on the SCB ingestion payload.
+  - field: messageId
+    description: Orbcomm message identifier on the Orbcomm ingestion payload.
+alternate_keys:
+  note: >-
+    Every read operation accepts four interchangeable ways to name assets, which is
+    unusual and worth stating plainly for an integrator.
+  keys:
+    - assetIds
+    - assetNames
+    - truSerialNumbers
+    - licensePlateNumbers
+  semantics: >-
+    Supply none and you receive every asset the key is entitled to. The
+    MultiAssetHistoryRequest / MultiAssetBatteryHistoryRequest bodies model the same
+    choice as four parallel parameter objects (AssetParamWithId, AssetParamWithName,
+    AssetParamWithTruSerialNumber, AssetParamWithLicensePlateNumber).
+entities:
+  - name: Asset
+    contract: lynx-fleet
+    description: A Carrier-managed cargo unit (trailer, truck body, container) with a telematics device.
+    relationships:
+      - has_many: Sensor
+        via: sensors
+      - has_many: CustomFieldsValues
+        via: customFields
+      - belongs_to: tenant
+        via: tenantId
+      - has_one: device
+        via: deviceId
+  - name: AssetList
+    contract: lynx-fleet
+    kind: collection
+    relationships:
+      - has_many: Asset
+    pagination: limit + nextToken
+  - name: AssetSnapshot
+    contract: lynx-fleet
+    description: Latest known state of an asset, composed of its status, temperature, position and alarms.
+    relationships:
+      - has_one: Asset
+      - has_one: StatusInfo
+      - has_one: TemperatureInfo
+      - has_one: PositionInfo
+      - has_many: AlarmInfo
+      - has_one: ConnectedTruckInfo
+  - name: AssetSnapshotList
+    contract: lynx-fleet
+    kind: collection
+    relationships:
+      - has_many: AssetSnapshot
+    pagination: limit + nextToken
+  - name: AssetHistoryEntry
+    contract: lynx-fleet
+    description: One timestamped historical record for a single asset — the widest composite in the model.
+    relationships:
+      - has_one: AssetInfo
+      - has_one: StatusInfo
+      - has_one: TemperatureInfo
+      - has_one: PositionInfo
+      - has_many: AlarmInfo
+      - has_many: CommandInfo
+      - has_many: Sensor
+      - has_one: ConnectedTruckInfo
+  - name: AssetHistoryList
+    contract: lynx-fleet
+    kind: collection
+    relationships:
+      - has_many: AssetHistoryEntry
+    pagination: limit + nextToken
+  - name: MultiAssetHistoryEntry
+    contract: lynx-fleet
+    description: >-
+      Structurally identical to AssetHistoryEntry but reached through the multi-asset
+      POST surface (10 assets per request).
+    relationships:
+      - has_one: AssetInfo
+      - has_one: StatusInfo
+      - has_one: TemperatureInfo
+      - has_one: PositionInfo
+      - has_many: AlarmInfo
+      - has_many: CommandInfo
+      - has_many: Sensor
+      - has_one: ConnectedTruckInfo
+  - name: MultiAssetHistoryItem
+    contract: lynx-fleet
+    relationships:
+      - has_many: MultiAssetHistoryEntry
+  - name: AssetInfo
+    contract: lynx-fleet
+    description: Denormalised asset descriptor embedded in history records.
+    relationships:
+      - has_many: CustomFieldsValues
+      - belongs_to: tenant
+        via: tenantId
+  - name: StatusInfo
+    contract: lynx-fleet
+    property_count: 28
+    description: Operating state of the refrigeration unit (run mode, power, door, engine, fuel and related flags).
+  - name: TemperatureInfo
+    contract: lynx-fleet
+    property_count: 27
+    description: Per-compartment setpoints, return/supply air temperatures and probe readings.
+  - name: PositionInfo
+    contract: lynx-fleet
+    description: GPS position of the asset.
+  - name: Alarm
+    contract: lynx-fleet
+    relationships:
+      - collected_in: AlarmInfo
+  - name: AlarmCodesAndDescriptionsResponse
+    contract: lynx-fleet
+    description: >-
+      Reference data — the alarm-code dictionary, served by its own operation
+      (alarm-codes-and-descriptions-v1) so a consumer can resolve codes it sees on
+      assets.
+  - name: AssetBattery
+    contract: lynx-fleet
+    relationships:
+      - belongs_to: Asset
+        via: assetId
+  - name: AssetBatteryList
+    contract: lynx-fleet
+    kind: collection
+    relationships:
+      - has_many: AssetBattery
+    pagination: limit + nextToken
+  - name: BatteryEvent
+    contract: lynx-fleet
+    relationships:
+      - collected_in: BatteryEvents
+  - name: AssetBatteryHistory
+    contract: lynx-fleet
+    relationships:
+      - has_one: AssetBatteryInfo
+      - has_many: BatteryEvents
+  - name: Sensor
+    contract: lynx-fleet
+    relationships:
+      - belongs_to: Asset
+  - name: ConnectedTruckInfo
+    contract: lynx-fleet
+    description: The tractor currently paired with a trailer asset, keyed by macId.
+  - name: CustomFieldsValues
+    contract: lynx-fleet
+    description: Customer-defined metadata on an asset, keyed by fieldId.
+  - name: ScbIngestorRequest
+    contract: lynx-fleet
+    kind: write
+    description: Inbound third-party sensor payload keyed by CtuId.
+  - name: OrbcommIngestorRequest
+    contract: lynx-fleet
+    kind: write
+    description: Inbound Orbcomm telematics payload keyed by messageId.
+  - name: Send2wayCmdRequestBody
+    contract: 2way-command
+    kind: write
+    description: >-
+      The command envelope. Requires assetId and carries one or more of 14 named
+      commands (CompartmentSetpoint1/2/3, ToggleCompartment1/2/3, DefrostInitiation,
+      RunMode, ClearAlarms, InitiatePretrip, TRUOnOff, SleepMode, GetActiveIntellisetId,
+      SetActiveIntelliset).
+    relationships:
+      - belongs_to: Asset
+        via: assetId
+  - name: SentCommand
+    contract: 2way-command
+    relationships:
+      - collected_in: Send2wayResponse
+      - identified_by: commandId
+  - name: CommandsStatus
+    contract: 2way-command
+    description: Status of a dispatched command.
+    relationships:
+      - belongs_to: Asset
+        via: assetId
+      - has_one: device
+        via: deviceId
+      - belongs_to: tenant
+        via: tenantId
+      - identified_by: commandId
+  - name: AvailableCommandsResponse
+    contract: 2way-command
+    description: >-
+      Capability map — which of the 14 commands the specific asset supports, as a
+      boolean per command. An agent should read this before sending anything.
+  - name: UnifiedModelProperty
+    contract: container
+    description: One property of the container Unified Model.
+  - name: UnifiedModelAlarm
+    contract: container
+    description: One alarm definition in the container Unified Model.
+  - name: SourceData
+    contract: container
+    description: Latest container telemetry record, keyed by SourceId and DeviceId.
+  - name: SourceDataList
+    contract: container
+    relationships:
+      - has_many: SourceData
+cross_contract_note: >-
+  The three contracts do NOT share a schema namespace. The truck/trailer surface is
+  Asset-centric; the container surface is SourceData/UnifiedModel-centric and reuses
+  none of the Asset schemas even though the guide describes both as the same "Lynx Data
+  Offering". An integrator covering both fleets writes two mappings, not one.
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

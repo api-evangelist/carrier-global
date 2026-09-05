@@ -1,17 +1,17 @@
-generated: '2026-07-11'
+generated: '2026-09-05'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
 - host: www.corporate.carrier.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Aug 30 04:21:23 2026 GMT
+  cert_expires: Oct 28 07:42:30 2026 GMT
   hsts: true
   hsts_max_age: 31536000
 - host: api.tta.lynxfleet.carrier.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Aug 29 23:43:45 2026 GMT
+  cert_expires: Oct 28 00:25:45 2026 GMT
   hsts: true
   hsts_max_age: 31536000
 - host: doc-api.fleet.lynx.carrier.io
@@ -30,4 +30,5 @@ domains:
   dnssec: false
   caa: []
   spf: true
-  dmarc: false
+  dmarc: true
+  dmarc_policy: none

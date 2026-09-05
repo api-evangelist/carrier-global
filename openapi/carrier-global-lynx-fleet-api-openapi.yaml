@@ -1,0 +1,2066 @@
+openapi: 3.0.0
+components:
+  schemas:
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: >-
+            The request was unacceptable, often due to missing a required
+            parameter
+          example: No match found
+    AuthRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: No valid API key provided
+          example: Unauthorized
+    ForbiddenRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The API key doesn't have permissions to perform the request
+          example: Access to the requested resource is forbidden
+    TooManyRequestsError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: >-
+            Too many requests hit the API too quickly. We recommend exponential
+            backoff of your requests
+          example: Too Many Requests
+    UnexpectedError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Something went wrong on Stripe's end
+          example: Server Error
+    Asset:
+      type: object
+      required:
+        - assetId
+      description: Represents all information about an asset.
+      properties:
+        assetId:
+          type: string
+          description: Lynx system unique Asset identifier
+          readOnly: true
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        assetName:
+          type: string
+          description: Asset name
+          example: Sample Asset
+        licensePlateNumber:
+          type: string
+          description: Asset License Plate
+          example: '1099176'
+        assetType:
+          type: string
+          description: Asset Type
+        customFields:
+          type: array
+          nullable: true
+          description: User Defined custom fields for the asset
+          items:
+            $ref: '#/components/schemas/CustomFieldsValues'
+        status:
+          type: string
+          example: moving
+          readOnly: true
+          description: Asset moving status
+          nullable: true
+          enum:
+            - stop
+            - moving
+        truSerialNumber:
+          type: string
+          description: Transport Refrigeration Unit - Serial Number
+          example: HD12345
+        truModelNumber:
+          type: string
+          description: Transport Refrigeration Unit - Model Number
+          example: KSK123K
+        truControlSystemType:
+          type: string
+          description: Transport Refrigeration Unit - Control System Type
+          example: APX
+        truSoftwareVersion:
+          type: string
+          readOnly: true
+          description: Transport Refrigeration Unit - Software Version
+          example: 7.72.00
+        createdDate:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          readOnly: true
+          description: Asset creation date
+        tenantId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Asset Company ID
+          example: a7f39dec-ca34-47d3-97a7-66bcfda0396b
+        tenantName:
+          type: string
+          description: Asset Company Name
+          example: Sample Company
+        deviceId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Telematics Device ID in Lynx system
+        sensorConfiguration:
+          type: array
+          nullable: true
+          description: Device Sensor configurations
+          items:
+            $ref: '#/components/schemas/Sensor'
+    AssetList:
+      type: object
+      description: List of Asset objects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+        total:
+          type: integer
+          example: 20
+          description: Total number of items that match the request
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    AssetBatteryList:
+      type: object
+      description: List of Asset Battery objects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetBattery'
+        total:
+          type: integer
+          example: 20
+          description: Total number of items that match the request
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    AssetBatteryHistory:
+      type: object
+      description: List of Asset history objects
+      properties:
+        data:
+          type: object
+          properties:
+            AssetInfo:
+              $ref: '#/components/schemas/AssetBatteryInfo'
+            BatteryEvents:
+              $ref: '#/components/schemas/BatteryEvents'
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    BatteryEvent:
+      type: object
+      description: Represents historical battery event
+      properties:
+        eventDateTimeUTC:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          description: >-
+            Date and time that the message was collected by the telematics
+            device
+        lowBatterySince:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          description: Date and time from when the battery soc was low
+        truPowerStatus:
+          type: string
+          example: grid
+          readOnly: true
+          description: >-
+            Power status indicating if the TRU power is connected to grid or
+            battery
+          nullable: true
+          enum:
+            - grid
+            - battery
+        truSerialNumber:
+          type: string
+          description: Transport Refrigeration Unit - Serial Number
+          example: HD12345
+        stateOfCharge:
+          type: number
+          description: battery unit state of charge
+          example: 90
+        chargingStatus:
+          type: string
+          description: battery charging status
+          nullable: true
+          example: Charging (Axle)
+          enum:
+            - Inactive
+            - Charging (Axle)
+            - Charging (Grid)
+            - In Use
+        batteryLastSeen:
+          type: string
+          format: date-time
+          example: '2023-04-24T09:12:33.001Z'
+          description: Last update event recieved from battery unit
+          nullable: true
+        batteryLastRebalance:
+          type: string
+          format: date-time
+          example: '2016-04-25T09:12:33.001Z'
+          description: last time when the battery is fully charged
+          nullable: true
+        batteryTemperatureMin:
+          type: number
+          example: 25
+          description: Recent battery minimum temperature noted
+        batteryTemperatureMax:
+          type: number
+          example: 40
+          description: Recent battery maximum temperature noted
+        isAlarm73Active:
+          type: boolean
+          description: Indicates if alarm is active or not
+          example: false
+    BatteryEvents:
+      type: array
+      description: An array containing battery event objects.
+      items:
+        $ref: '#/components/schemas/BatteryEvent'
+    BatteryHistoryEntry:
+      type: object
+      description: ''
+      properties:
+        AssetInfo:
+          $ref: '#/components/schemas/AssetBatteryInfo'
+        BatteryEvents:
+          $ref: '#/components/schemas/BatteryEvents'
+    AssetBatteryInfo:
+      type: object
+      description: Represents basic info about Asset
+      properties:
+        assetId:
+          type: string
+          description: Lynx system unique Asset identifier
+          readOnly: true
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        assetName:
+          type: string
+          description: Asset name
+          example: Sample Asset
+        truSerialNumber:
+          type: string
+          description: Transport Refrigeration Unit - Serial Number
+          example: HD123456
+    AssetParamWithId:
+      type: object
+      required:
+        - assetId
+      properties:
+        assetId:
+          description: Asset id
+          type: string
+          example: TestAssetId
+        nextToken:
+          description: A pagination token used to return a set of results
+          type: string
+          example: AYABeCfa0bJE93-3AxGARdk1MAoAAAABAAdhd3Mta21zAEt
+          minLength: 1
+          maxLength: 2048
+      example:
+        assetId: TestAssetId
+    AssetParamWithName:
+      type: object
+      required:
+        - assetName
+      properties:
+        assetName:
+          description: Asset name
+          type: string
+          example: TestAssetName
+        nextToken:
+          description: A pagination token used to return a set of results
+          type: string
+          example: AYABeCfa0bJE93-3AxGARdk1MAoAAAABAAdhd3Mta21zAEt
+          minLength: 1
+          maxLength: 2048
+      example:
+        assetName: TestAssetName
+    AssetParamWithTruSerialNumber:
+      type: object
+      required:
+        - truSerialNumber
+      properties:
+        truSerialNumber:
+          description: TRU serial number
+          type: string
+          example: TestTruSerialNumber
+        nextToken:
+          description: A pagination token used to return a set of results
+          type: string
+          example: AYABeCfa0bJE93-3AxGARdk1MAoAAAABAAdhd3Mta21zAEt
+          minLength: 1
+          maxLength: 2048
+      example:
+        truSerialNumber: TestTruSerialNumber
+    AssetParamWithLicensePlateNumber:
+      type: object
+      required:
+        - licensePlateNumber
+      properties:
+        licensePlateNumber:
+          description: License Plate Number
+          type: string
+          example: TestLicensePlateNumber
+        nextToken:
+          description: A pagination token used to return a set of results
+          type: string
+          example: AYABeCfa0bJE93-3AxGARdk1MAoAAAABAAdhd3Mta21zAEt
+          minLength: 1
+          maxLength: 2048
+      example:
+        licensePlateNumber: TestLicensePlateNumber
+    Sensor:
+      type: object
+      description: Information about sensor configuration status
+      properties:
+        sensorType:
+          type: string
+          example: AIN4
+          enum:
+            - NONE
+            - AIN1
+            - AIN2
+            - AIN3
+            - AIN4
+            - DIN1
+            - DIN1_DATACOLD
+            - DIN2
+            - DIN2_DATACOLD
+            - DIN3
+            - DIN3_DATACOLD
+            - DIN4
+            - DIN4_DATACOLD
+            - BT_EN12830
+          description: Type of the sensor
+        configured:
+          type: boolean
+          description: Indication if sensor is configured or not
+          example: true
+        sensorLocation:
+          type: string
+          nullable: true
+          description: >-
+            Installation location (Side Door, Rear Door) [Applicable only to
+            door sensors]
+          enum:
+            - NONE
+            - SIDE
+            - REAR
+            - RAS1
+            - RAS1_DATACOLD
+            - RAS2
+            - RAS2_DATACOLD
+            - RAS3
+            - RAS3_DATACOLD
+            - SAS1
+            - SAS1_DATACOLD
+            - SAS2
+            - SAS2_DATACOLD
+            - SAS3
+            - SAS3_DATACOLD
+            - BOX1
+            - BOX1_DATACOLD
+            - BOX2
+            - BOX2_DATACOLD
+            - BOX3
+            - BOX3_DATACOLD
+          example: RAS1
+        connectionLocation:
+          type: string
+          example: Telematics device | TRU Controller
+          description: Device that the sensor is connected to
+        sensorData:
+          type: string
+          nullable: true
+          description: Sensor value
+          example: '48.577778'
+    AssetHistoryEntry:
+      type: object
+      description: Represents telematics data of the device in the concrete period of time
+      properties:
+        eventDateTimeUTC:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          description: >-
+            Date and time that the message was collected by the telematics
+            device
+        assetInfo:
+          $ref: '#/components/schemas/AssetInfo'
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        temperatureInfo:
+          $ref: '#/components/schemas/TemperatureInfo'
+        positionInfo:
+          $ref: '#/components/schemas/PositionInfo'
+        alarmInfo:
+          $ref: '#/components/schemas/AlarmInfo'
+        commandInfo:
+          $ref: '#/components/schemas/CommandInfo'
+        sensorConfiguration:
+          type: array
+          nullable: true
+          description: Device Sensor configurations
+          items:
+            $ref: '#/components/schemas/Sensor'
+        connectedTruckInfo:
+          $ref: '#/components/schemas/ConnectedTruckInfo'
+    MultiAssetHistoryEntry:
+      type: object
+      description: Represents telematics data of the device in the concrete period of time
+      properties:
+        eventDateTimeUTC:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          description: >-
+            Date and time that the message was collected by the telematics
+            device
+        assetInfo:
+          $ref: '#/components/schemas/AssetInfo'
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        temperatureInfo:
+          $ref: '#/components/schemas/TemperatureInfo'
+        positionInfo:
+          $ref: '#/components/schemas/PositionInfo'
+        alarmInfo:
+          $ref: '#/components/schemas/AlarmInfo'
+        commandInfo:
+          $ref: '#/components/schemas/CommandInfo'
+        sensorConfiguration:
+          type: array
+          nullable: true
+          description: Device Sensor configurations
+          items:
+            $ref: '#/components/schemas/Sensor'
+        connectedTruckInfo:
+          $ref: '#/components/schemas/ConnectedTruckInfo'
+    MultiAssetHistoryItem:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiAssetHistoryEntry'
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    AssetInfo:
+      type: object
+      description: Represents all information about an asset.
+      properties:
+        assetId:
+          type: string
+          description: Lynx system unique Asset identifier
+          readOnly: true
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        assetName:
+          type: string
+          description: Asset name
+          example: Sample Asset
+        deviceId:
+          type: string
+          description: Telematics Device ID in Lynx system
+          format: uuid
+          example: 8d8a8b5a-6069-41ad-85b7-a037ee62660d
+        createdDate:
+          type: string
+          description: Creation date
+          format: date-time
+          example: '2024-10-22T09:13:22.212Z'
+        licensePlateNumber:
+          type: string
+          description: Asset License Plate
+          example: '1099176'
+        assetType:
+          type: string
+          description: Asset Type
+        customFields:
+          type: array
+          nullable: true
+          description: User Defined custom fields for the asset
+          items:
+            $ref: '#/components/schemas/CustomFieldsValues'
+        status:
+          type: string
+          description: Asset moving status
+          example: moving
+        tenantId:
+          type: string
+          description: Asset Company ID
+          format: uuid
+          example: a7f39dec-ca34-47d3-97a7-66bcfda0396b
+        tenantName:
+          type: string
+          description: Asset Company Name
+          example: TestCompany
+        truSerialNumber:
+          type: string
+          description: Transport Refrigeration Unit - Serial Number
+          example: HD12345
+        truModelNumber:
+          type: string
+          description: Transport Refrigeration Unit - Model Number
+          example: KSK378N6LF1
+        truControlSystemType:
+          type: string
+          description: Transport Refrigeration Unit - Control System Type
+          example: APX
+        truSoftwareVersion:
+          type: string
+          readOnly: true
+          example: 4.79.00
+          description: Transport Refrigeration Unit - Software Version
+    StatusInfo:
+      type: object
+      description: >-
+        An object containing information about the state of the Transport
+        Refrigeration Unit at the time of the message.
+      properties:
+        powerStatus:
+          type: string
+          description: Transport Refrigeration Unit Power Status (On or Off)
+          example: 'off'
+        switchOnHours:
+          type: number
+          description: >-
+            The total accumulated hours that the Transport Refrigeration Unit
+            has been turned on.
+          example: 859
+        engineRunHours:
+          type: number
+          description: >-
+            The total accumulated hours that the Transport Refrigeration Unit
+            has been running on its engine.
+          example: 4
+        batteryVoltage:
+          type: number
+          example: 12.9
+          description: The voltage of the Transport Refrigeration Unit's 12V battery.
+        batteryCurrent:
+          type: number
+          example: 0.05
+          description: Battery Current (Device).
+        deviceBatteryPowerSupply:
+          type: number
+          example: 2.05
+          description: Battery Power Supply (Device).
+        deviceBatteryVoltage:
+          type: number
+          example: 3.01
+          description: Battery Voltage of the Device.
+        rearDoorOpen:
+          type: boolean
+          description: Indicates if the rear door on the truck or trailer is open or not.
+          example: false
+        sideDoorOpen:
+          type: boolean
+          description: Indicates if the side door on the truck or trailer is open or not.
+          example: false
+        fuelLevel:
+          type: number
+          description: Transport Refrigeration Unit Fuel Level (%).
+          example: 20
+        truStatus:
+          type: string
+          description: Overall Status of the Transport Refrigeration Unit.
+          enum:
+            - 'OFF'
+            - 'ON'
+          example: 'ON'
+        comp1OperatingMode:
+          type: string
+          description: Operating mode of Compartment 1.
+          example: Heat
+        comp2OperatingMode:
+          type: string
+          description: Operating mode of Compartment 2.
+          example: Off,  (compartment Off due to engine off)
+        comp3OperatingMode:
+          type: string
+          description: Operating mode of Compartment 3.
+          example: Off,  (compartment Off due to engine off)
+        comp1Status:
+          type: boolean
+          description: On/Off Status of Compartment 1.
+          example: true
+        comp2Status:
+          type: boolean
+          description: On/Off Status of Compartment 2.
+          example: true
+        comp3Status:
+          type: boolean
+          description: On/Off Status of Compartment 3.
+          example: false
+        positionSpeed:
+          type: number
+          description: Speed of the unit at the time of the message.
+          example: 0
+        vehicleMileage:
+          type: number
+          description: Mileage of the unit at the time of the message.
+          example: 5
+        standByHours:
+          type: number
+          description: >-
+            The total accumulated hours that the Transport Refrigeration Unit
+            has been running on stand by, or electric, power.
+          example: 150
+        movementStatus:
+          type: boolean
+          description: Indicates if the unit is moving or not.
+          example: false
+        enginePowerMode:
+          type: string
+          description: Transport Refrigeration Unit Power Source (Engine or Standby).
+          enum:
+            - Standby
+            - Engine
+          example: Standby
+        engineControlMode:
+          type: string
+          description: Transport Refrigeration Unit Control Mode.
+          enum:
+            - Continuous
+            - Start/Stop
+          example: Continuous
+        engineSpeed:
+          type: string
+          description: Transport Refrigeration Unit Engine Speed.
+          enum:
+            - Engine speed High
+            - Engine speed Low
+            - Engine speed very Low
+            - Engine speed very High
+          example: Engine speed High
+        switchKeyStatus:
+          type: boolean
+          example: true
+          description: Lcv switch key status.
+        roadEnergy:
+          type: number
+          example: 123
+          description: Lcv road energy.
+        standByEnergy:
+          type: number
+          example: 13
+          description: Lcv standBy Energy.
+        powerMode:
+          type: number
+          example: 15
+          description: Lcv power mode.
+    TemperatureInfo:
+      type: object
+      description: >-
+        An object containing information about the temperature recordings at the
+        time of the message.
+      properties:
+        setpointTemp1:
+          type: number
+          description: Compartment 1 Setpoint Temperature (°C)
+          example: -30
+        setpointTemp2:
+          type: number
+          description: Compartment 2 Setpoint Temperature (°C)
+          example: 1
+        setpointTemp3:
+          type: number
+          description: Compartment 3 Setpoint Temperature (°C)
+          example: 2
+        returnAirTemp1:
+          type: number
+          description: Compartment 1 Return Air Temperature (°C)
+          example: 6.7
+        returnAirTemp2:
+          type: number
+          description: Compartment 2 Return Air Temperature (°C)
+          example: 15.8
+        returnAirTemp3:
+          type: number
+          description: Compartment 3 Return Air Temperature (°C)
+          example: 2.2
+        supplyAirTemp1:
+          type: number
+          description: Compartment 1 Supply Air Temperature (°C)
+          example: 13.3
+        supplyAirTemp2:
+          type: number
+          description: Compartment 2 Supply Air Temperature (°C)
+          example: 16.2
+        supplyAirTemp3:
+          type: number
+          description: Compartment 3 Supply Air Temperature (°C)
+          example: 4.1
+        datacoldTemp1:
+          type: number
+          description: DataCOLD temperature sensor 1
+          example: 1.1
+        datacoldTemp2:
+          type: number
+          description: DataCOLD temperature sensor 2
+          example: 2.2
+        datacoldTemp3:
+          type: number
+          description: DataCOLD temperature sensor 3
+          example: 2.1
+        datacoldTemp4:
+          type: number
+          description: DataCOLD temperature sensor 4
+          example: 3.4
+        datacoldTemp5:
+          type: number
+          description: DataCOLD temperature sensor 5
+          example: 1.9
+        datacoldTemp6:
+          type: number
+          description: DataCOLD temperature sensor 6
+          example: 3.1
+        bluetoothTemp1:
+          type: number
+          description: Bluetooth temperature sensor 1
+          example: 3.1
+        bluetoothTemp2:
+          type: number
+          description: Bluetooth temperature sensor 2
+          example: 2.2
+        bluetoothTemp3:
+          type: number
+          description: Bluetooth temperature sensor 3
+          example: 1.8
+        bluetoothTemp4:
+          type: number
+          description: Bluetooth temperature sensor 4
+          example: 4.1
+        bluetoothTemp5:
+          type: number
+          description: Bluetooth temperature sensor 5
+          example: 1.1
+        bluetoothTemp6:
+          type: number
+          description: Bluetooth temperature sensor 6
+          example: 5.1
+        oneWireTemp1:
+          type: number
+          description: One Wire temperature sensor 1
+          example: 2.5
+        oneWireTemp2:
+          type: number
+          description: One Wire temperature sensor 2
+          example: 7.2
+        oneWireTemp3:
+          type: number
+          description: One Wire temperature sensor 3
+          example: 2.9
+        oneWireTemp4:
+          type: number
+          description: One Wire temperature sensor 4
+          example: 4.4
+        oneWireTemp5:
+          type: number
+          description: One Wire temperature sensor 5
+          example: 2.4
+        oneWireTemp6:
+          type: number
+          description: One Wire temperature sensor 6
+          example: 1.5
+    PositionInfo:
+      type: object
+      description: >-
+        An object containing information about the location of the asset at the
+        time of the message.
+      properties:
+        lat:
+          type: string
+          example: 51.61341
+          description: Latitude coordinate value
+        long:
+          type: string
+          example: 5.508494
+          description: Longitude coordinate value
+    Alarm:
+      type: object
+      description: >-
+        An object containing information about any Transport Refrigeration Unit
+        alarms at the time of the message.
+      properties:
+        response:
+          type: string
+          example: Shut Down
+          description: Alarm type
+        code:
+          type: string
+          example: 246
+          description: Alarm code
+        description:
+          type: string
+          description: Alarm description
+          example: Eprom Write Failure
+    AlarmInfo:
+      type: array
+      description: >-
+        An array containing AlarmInfo objects, which contains information about
+        any Transport Refrigeration Unit alarms at the time of the message.
+      items:
+        $ref: '#/components/schemas/Alarm'
+    ConnectedTruckInfo:
+      type: object
+      description: >-
+        An array containing ConnectedTruckInfo objects, which contain
+        information about signal strength, licensePlate number, macId and
+        truckName.
+      properties:
+        truckName:
+          type: string
+          example: DevBeacon14
+          description: Truck Name
+        licensePlateNumber:
+          type: string
+          example: HF759B4
+          description: license Plate Number
+        signalStrength:
+          type: number
+          example: 15
+          description: Signal Strength
+        macId:
+          type: string
+          example: 7CD9F41E90B4
+          description: Mac ID
+    CustomFieldsValues:
+      type: object
+      description: User Defined custom fields CustomFieldsValues
+      properties:
+        fieldId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Refernce for user defined cusstom field
+        label:
+          type: string
+          description: Label for the user defined custom field
+        value:
+          type: string
+          description: Label for the user defined custom field
+        type:
+          type: string
+          description: type for the custom field
+    AssetHistoryList:
+      type: object
+      description: List of Asset history objects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetHistoryEntry'
+        total:
+          type: integer
+          example: 20
+          description: Total number of items that match the request
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    MultiAssetHistory:
+      type: array
+      description: Multi Asset History
+      items:
+        $ref: '#/components/schemas/MultiAssetHistoryItem'
+    MultiAssetHistoryRequest:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - assets
+      properties:
+        assets:
+          description: >-
+            Array of asset ids (could be mixed with assetNames and/or
+            truSerialNumbers and/or licensePlateNumbers) with optional
+            nextToken. Requests are limited to 10 asset ids
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/AssetParamWithId'
+              - $ref: '#/components/schemas/AssetParamWithName'
+              - $ref: '#/components/schemas/AssetParamWithTruSerialNumber'
+              - $ref: '#/components/schemas/AssetParamWithLicensePlateNumber'
+          example:
+            - assetId: TestAssetIdAsset1
+              nextToken: AYABeCfa0bJE93-3AxGARdk1MAoAAAABAAdhd3Mta21zAEt
+            - assetId: TestIdAsset2
+            - assetName: TestAssetNameAsset3
+            - truSerialNumber: TestAssetTruSerialNumberAsset4
+            - licensePlateNumber: TestLicensePlateNumberAsset5
+        startDate:
+          description: >-
+            Return data after this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            day
+          type: string
+          format: date-time
+          example: '2019-05-17T08:30:00Z'
+        endDate:
+          description: >-
+            Return data before this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            day
+          type: string
+          format: date-time
+          example: '2019-05-17T08:30:00Z'
+        limit:
+          description: The number of items to return
+          type: integer
+          minimum: 1
+          maximum: 100
+    AssetSnapshot:
+      type: object
+      description: Represents telematics data of the device in concrete period of time
+      properties:
+        eventDateTimeUTC:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          description: >-
+            Date and time that the last message for the referenced asset was
+            collected by the telematics device
+        assetInfo:
+          $ref: '#/components/schemas/Asset'
+        statusInfo:
+          $ref: '#/components/schemas/StatusInfo'
+        temperatureInfo:
+          $ref: '#/components/schemas/TemperatureInfo'
+        positionInfo:
+          $ref: '#/components/schemas/PositionInfo'
+        alarmInfo:
+          $ref: '#/components/schemas/AlarmInfo'
+        connectedTruckInfo:
+          $ref: '#/components/schemas/ConnectedTruckInfo'
+    AssetSnapshotList:
+      type: object
+      description: List of Asset snapshot objects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetSnapshot'
+        total:
+          type: integer
+          example: 20
+          description: Total number of items that match the request
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    AssetBattery:
+      type: object
+      required:
+        - assetId
+      description: Represents all information about asset
+      properties:
+        assetId:
+          type: string
+          description: Lynx system unique Asset identifier
+          readOnly: true
+          example: b1ac42db-3574-4d1c-aaa3-db1f669f693a
+        assetName:
+          type: string
+          description: Asset name
+          example: sample_asset
+        truStatus:
+          type: string
+          example: 'ON'
+          description: Tru unit status
+          nullable: true
+          enum:
+            - 'ON'
+            - 'OFF'
+        truPowerStatus:
+          type: string
+          example: grid
+          readOnly: true
+          description: >-
+            Power status indicating if the TRU power is connected to grid or
+            battery
+          nullable: true
+          enum:
+            - grid
+            - battery
+        truSerialNumber:
+          type: string
+          description: Transport Refrigeration Unit - Serial Number
+          example: HD12345
+        stateOfCharge:
+          type: number
+          description: battery unit state of charge
+          example: 90
+        chargingStatus:
+          type: string
+          description: battery charging status
+          nullable: true
+          enum:
+            - Inactive
+            - Charging (Axle)
+            - Charging (Grid)
+            - In Use
+          example: Inactive
+        batteryLastSeen:
+          type: string
+          format: date-time
+          example: '2023-04-24T09:12:33.001Z'
+          description: Last update event recieved from battery unit
+          nullable: true
+        batteryLastRebalance:
+          type: string
+          format: date-time
+          example: '2016-04-25T09:12:33.001Z'
+          description: last time when the battery is fully charged
+          nullable: true
+        batteryTemperatureMin:
+          type: number
+          example: 25
+          description: Recent battery minimum temperature noted
+        batteryTemperatureMax:
+          type: number
+          example: 40
+          description: Recent battery maximum temperature noted
+        lowBatterySince:
+          type: string
+          format: date-time
+          example: '2023-08-28T04:15:00.000Z'
+          description: The battery's charge dropped below 20% from dateTime
+          nullable: true
+        lastSyncTime:
+          type: string
+          format: date-time
+          example: '2023-08-28T09:18:19.000Z'
+          description: The battery's data was last synchronized with the server
+          nullable: true
+    Command:
+      type: object
+      description: Represents basic identifying information about a command.
+      properties:
+        name:
+          type: string
+          description: Name of the changed by a command field
+          example: Run Mode
+        value:
+          type: string
+          description: New value set by a command
+          example: Continuous
+    CommandInfo:
+      type: array
+      description: An array containing Command objects.
+      items:
+        $ref: '#/components/schemas/Command'
+    MultiAssetBatteryHistoryItem:
+      type: object
+      description: List of Asset Battery history objects
+      properties:
+        data:
+          type: object
+          properties:
+            AssetInfo:
+              $ref: '#/components/schemas/AssetBatteryInfo'
+            BatteryEvents:
+              $ref: '#/components/schemas/BatteryEvents'
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
+    MultiAssetBatteryHistory:
+      type: array
+      description: Multi Asset Battery History
+      items:
+        $ref: '#/components/schemas/MultiAssetBatteryHistoryItem'
+    MultiAssetBatteryHistoryRequest:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - assets
+      properties:
+        assets:
+          description: >-
+            Retrieve battery history using array of asset ids(could be mixed
+            with truSerialNumbers). Requests are limited to 10 asset ids
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/AssetParamWithId'
+              - $ref: '#/components/schemas/AssetParamWithTruSerialNumber'
+          example:
+            - assetId: TestAssetIdAsset1
+              nextToken: AYABeCfa0bJE93-3AxGARdk1MAoAAAABAAdhd3Mta21zAEt
+            - assetId: TestIdAsset2
+            - truSerialNumber: TestAssetTruSerialNumberAsset4
+        startDate:
+          description: >-
+            Return data after this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            day
+          type: string
+          format: date-time
+          example: '2019-05-17T08:30:00Z'
+        endDate:
+          description: >-
+            Return data before this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            day
+          type: string
+          format: date-time
+          example: '2019-05-17T08:30:00Z'
+        limit:
+          description: The number of items to return
+          type: integer
+          minimum: 1
+          maximum: 100
+    ScbIngestor:
+      type: object
+      description: Scb Ingestor Response
+      properties:
+        success:
+          description: Success indicator
+          type: string
+          example: 'true'
+        error:
+          type: string
+          description: Error message
+          example: Asset not found
+    ScbIngestorRequest:
+      type: object
+      properties:
+        ChassisNumber:
+          description: Chassis Number
+          type: string
+          example: DEMO0000006348436
+        CtuId:
+          description: Ctu Id
+          type: integer
+        TruSerialNumber:
+          description: Tru Serial Number
+          type: string
+        Plate:
+          description: Plate
+          type: string
+          example: Plate
+        ReferenceUserName:
+          description: Reference User Name
+          type: string
+          example: FULL
+        ReferenceCustomerName:
+          description: Reference Customer Name
+          type: string
+          example: cbtPortalDemo
+        ReceiveTime:
+          description: Receive Time
+          type: string
+          format: date-time
+          example: '2021-10-28T01:01:03Z'
+        DeviceTime:
+          description: Device Time
+          type: string
+          format: date-time
+          example: '2021-10-28T01:01:03Z'
+    OrbcommIngestor:
+      type: object
+      description: Orbcomm Ingestor Response
+      properties:
+        success:
+          description: Success indicator
+          type: string
+          example: 'true'
+        error:
+          type: string
+          description: Error message
+          example: Asset not found
+    OrbcommIngestorRequest:
+      type: object
+      properties:
+        messageId:
+          description: Message ID
+          type: string
+          example: '17699048077'
+        assetStatus:
+          description: Asset Status
+          type: object
+        reeferStatus:
+          description: Reefer Status
+          type: object
+    AlarmCodesAndDescriptions:
+      type: object
+      description: List of Alarm codes and descriptions
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlarmCodesAndDescriptionsResponse'
+        totalItems:
+          type: integer
+          example: 20
+          description: Total number of Alarms for the given controller type
+    AlarmCodesAndDescriptionsResponse:
+      type: object
+      required:
+        - controllerType
+      description: Represents all Alarm codes and descriptions
+      properties:
+        code:
+          type: string
+          description: Alarm code
+          example: E11
+        dscription:
+          type: string
+          description: Alarm descripton
+          example: Phase error (Error 400Vac power supply)
+  securitySchemes:
+    x-lynx-api-key:
+      type: apiKey
+      in: header
+      name: x-lynx-api-key
+info:
+  title: Carrier LYNX Developer APIs
+  description: >
+    ![](https://images.carriercms.com/image/upload/h_150,q_100,f_auto/v1573562016/common/logos/carrier-corp-logo.png
+
+    "Carrier Logo")
+
+
+
+    This is the public API for Carrier LYNX.
+
+
+    - [Register Here](<https://fleet.lynx.carrier.io>)
+
+    - [API Documentation](/api-documentation)
+
+    - [Terms and Conditions](https://www.carrier.com/lynx/terms-of-use)
+
+
+    **Contact Us** <br>
+
+    &nbsp;&nbsp;E-mail: <lynxfleetadmin@carrier.com> &nbsp;&nbsp; © 2021 Carrier
+  version: 1.0.0
+paths:
+  /v1/assets:
+    get:
+      operationId: asset-list-v1
+      summary: Get assets list
+      description: This operation will return all assets
+      tags:
+        - core
+      parameters:
+        - name: assetIds
+          in: query
+          description: >-
+            List of asset ids (optional, comma separated. If neither assetIds,
+            nor assetNames, nor truSerialNumbers, nor licensePlateNumbers are
+            provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: e3d4e850-28a7-4045-b5d3-bb58cad202b4
+        - name: assetNames
+          in: query
+          description: >-
+            List of asset names (optional, comma separated. If neither assetIds,
+            nor assetNames, nor truSerialNumbers, nor licensePlateNumbers are
+            provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: TA12345
+        - name: truSerialNumbers
+          in: query
+          description: >-
+            List of asset TRU serial numbers (optional, comma separated. If
+            neither assetIds, nor assetNames, nor truSerialNumbers, nor
+            licensePlateNumbers are provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: HD12345
+        - name: licensePlateNumbers
+          in: query
+          description: >-
+            List of license plate numbers (optional, comma separated. If neither
+            assetIds, nor assetNames, nor truSerialNumbers, nor
+            licensePlateNumbers are provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: '1099176'
+        - name: limit
+          in: query
+          description: The number of items to return
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 250
+            default: 100
+        - name: nextToken
+          in: query
+          description: A pagination token used to return a set of results
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 2048
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/asset-snapshots:
+    get:
+      operationId: asset-snapshot-list-v1
+      summary: Get asset snapshots list
+      description: This operation will return asset snapshots list
+      tags:
+        - core
+      parameters:
+        - name: assetIds
+          in: query
+          description: >-
+            List of asset ids (optional, comma separated. If neither assetIds,
+            nor assetNames, nor truSerialNumbers, nor licensePlateNumbers are
+            provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: b1ac42db-3574-4d1c-aaa3-db1f669f693a
+        - name: assetNames
+          in: query
+          description: >-
+            List of asset names (optional, comma separated. If neither assetIds,
+            nor assetNames, nor truSerialNumbers, nor licensePlateNumbers are
+            provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: Sample Asset
+        - name: truSerialNumbers
+          in: query
+          description: >-
+            List of asset TRU serial numbers (optional, comma separated. If
+            neither assetIds, nor assetNames, nor truSerialNumbers, nor
+            licensePlateNumbers are provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: HD12345
+        - name: licensePlateNumbers
+          in: query
+          description: >-
+            List of license plate numbers (optional, comma separated. If neither
+            assetIds, nor assetNames, nor truSerialNumbers, nor
+            licensePlateNumbers are provided then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: '1099176'
+        - name: limit
+          in: query
+          description: The number of items to return
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 250
+            default: 100
+        - name: nextToken
+          in: query
+          description: A pagination token used to return a set of results
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 2048
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetSnapshotList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/asset-history-items:
+    get:
+      operationId: asset-history-list-v1
+      summary: Get asset history items
+      description: This operation will return asset history items
+      tags:
+        - core
+      parameters:
+        - name: assetId
+          in: query
+          description: >-
+            Asset id (optional, but either assetId, assetName, truSerialNumber,
+            or license plate number should be provided)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: b1ac42db-3574-4d1c-aaa3-db1f669f693a
+        - name: assetName
+          in: query
+          description: >-
+            Asset name (optional, but either assetId, assetName,
+            truSerialNumber, or licensePlateNumber should be provided)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: Test-Asset-1
+        - name: truSerialNumber
+          in: query
+          description: >-
+            TRU serial number (optional, but either assetId, assetName,
+            truSerialNumber, or licensePlateNumber should be provided)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: HD12345
+        - name: licensePlateNumber
+          in: query
+          description: >-
+            License plate number (optional, but either assetId, assetName,
+            truSerialNumber, or licensePlateNumber should be provided)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: '1099176'
+        - name: startDate
+          in: query
+          description: >-
+            Return data after this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. Effective June 12 2025:** the maximum
+            allowed span between `startDate` and `endDate` is **7 days**.
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: date-time
+            example: '2019-05-17T08:30:00Z'
+        - name: endDate
+          in: query
+          description: >-
+            Return data before this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. Effective June 12 2025:** the maximum
+            allowed span between `startDate` and `endDate` is **7 days**.
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: date-time
+            example: '2019-05-17T08:30:00Z'
+        - name: limit
+          in: query
+          description: The number of items to return
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+        - name: nextToken
+          in: query
+          description: A pagination token used to return a set of results
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 2048
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetHistoryList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/multi-asset-history:
+    post:
+      operationId: multi-asset-history-v1
+      summary: Get multi asset history
+      description: This operation will return multi asset history
+      tags:
+        - core
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultiAssetHistoryRequest'
+        description: Multi Asset History request
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiAssetHistory'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/asset-batteries:
+    get:
+      operationId: asset-battery-list-v1
+      summary: Get asset batteries list
+      description: This operation will return all batteries for the assets
+      tags:
+        - core
+      parameters:
+        - name: assetIds
+          in: query
+          description: >-
+            List of asset ids (optional, comma separated. If neither assetIds,
+            nor assetNames, nor truSerialNumbers are provided then all assets
+            will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: b1ac42db-3574-4d1c-aaa3-db1f669f693a
+        - name: truSerialNumbers
+          in: query
+          description: >-
+            List of asset TRU serial numbers (optional, comma separated. If
+            neither assetIds, nor assetNames, nor truSerialNumbers are provided
+            then all assets will be returned)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: HD12345
+        - name: limit
+          in: query
+          description: The number of items to return
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 250
+            default: 100
+        - name: nextToken
+          in: query
+          description: A pagination token used to return a set of results
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 2048
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetBatteryList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/asset-battery-history:
+    get:
+      operationId: asset-battery-history-list-v1
+      summary: Get asset battery history
+      description: This operation will return all battery history for the assets
+      tags:
+        - core
+      parameters:
+        - name: assetId
+          in: query
+          description: Asset id to get battery history info
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: b1ac42db-3574-4d1c-aaa3-db1f669f693a
+        - name: truSerialNumber
+          in: query
+          description: Asset TRU serial number to get battery history info
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: HD12345
+        - name: startDate
+          in: query
+          description: >-
+            Return data after this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            month
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: date-time
+            example: '2019-05-17T08:30:00Z'
+        - name: endDate
+          in: query
+          description: >-
+            Return data before this input. UTC date in ISO Date Time Format
+            yyyy-MM-dd'T'HH:mm:ssZ. startDate - endDate range cannot exceed 1
+            month
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: date-time
+            example: '2019-05-17T08:30:00Z'
+        - name: limit
+          in: query
+          description: The number of items to return
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 250
+            default: 100
+        - name: nextToken
+          in: query
+          description: A pagination token used to return a set of results
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 2048
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetBatteryHistory'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/multi-asset-battery-history:
+    post:
+      operationId: multi-asset-battery-history-v1
+      summary: Get multi asset battery history
+      description: This operation will return multi asset battery history
+      tags:
+        - core
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultiAssetBatteryHistoryRequest'
+        description: Multi Battery Asset History request
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiAssetBatteryHistory'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/scb-ingestor:
+    post:
+      operationId: scb-ingestor-v1
+      summary: SCB ingestor
+      description: This operation will ingest SCB telemetry data
+      tags:
+        - core
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScbIngestorRequest'
+        description: SCB ingestor request
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScbIngestor'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/orbcomm-ingestor:
+    post:
+      operationId: orbcomm-ingestor-v1
+      summary: Orbcomm ingestor
+      description: This operation will ingest Orbcomm telemetry data
+      tags:
+        - core
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrbcommIngestorRequest'
+        description: Orbcomm ingestor request
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrbcommIngestor'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/alarm-codes-and-descriptions:
+    get:
+      operationId: alarm-codes-and-descriptions-v1
+      summary: Get alarm codes and descriptions
+      description: This operation will return alarm codes and descriptions
+      tags:
+        - core
+      parameters:
+        - name: controllerType
+          in: query
+          description: TRU Controller Type
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            enum:
+              - Rhonda
+              - APX
+              - Summit
+              - AT52
+              - Advance
+              - Pulsor
+            example: AT52
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlarmCodesAndDescriptions'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+security:
+  - x-lynx-api-key: []
+servers:
+  - url: https://api.fleet.lynx.carrier.io
+    description: prod

@@ -1,0 +1,61 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://doc-api.fleet.lynx.carrier.io/ (Lynx Fleet Dev Portal, interactive API
+  playground) and https://api.portal.fleet.lynx.carrier.io/public/graphql
+  (getPublicProductInfo → guide.usingTheAPIs.integrationSteps)
+provider: Carrier Global
+providerId: carrier-global
+console:
+  published: true
+  kind: interactive-api-explorer
+  url: https://doc-api.fleet.lynx.carrier.io/
+  description: >-
+    The Lynx Fleet Dev Portal renders each product's OpenAPI as a browsable reference
+    with a live try-it panel: an "Authorize" control takes the tenant API key, the
+    request builder assembles path and query parameters and a JSON body from the spec,
+    and submitting issues a real fetch to the servers[0] URL of that contract with the
+    key in the x-lynx-api-key header. There is also a "Download YAML spec" control that
+    serves the contract itself.
+  authorize_flow: >-
+    "To test requests using your API Key, click the Authorize button at the top of the
+    API portal and enter your API Key." (published guide, verbatim)
+  spec_download: >-
+    Available to anonymous visitors via the portal's getPublicApiSpecYml query; the
+    signed-in path uses getApiSpecYml.
+  access_note: >-
+    The portal renders anonymously — the three contracts and their guides are readable
+    without an account — but every request the try-it panel issues goes to the live
+    production host and needs a real tenant key. There is no anonymous execution.
+test_environment:
+  published: false
+  test_credentials: none published
+  test_keys: none published
+  test_fixtures: none published
+  test_identifiers: none published
+  time_simulation: false
+  evidence: >-
+    The integration guide's testing step reads, in full: "Use sandbox or test
+    environments provided by Lynx to validate your integration before going live." No
+    sandbox host, no test key prefix, no seeded asset ids, no magic identifiers and no
+    fixture data are published anywhere in the portal, the guide or the three
+    contracts. The single production server per contract
+    (https://api.fleet.lynx.carrier.io, /2waycmd, /coa) is the only host named.
+  note: >-
+    NO TEST VALUES ARE INVENTED HERE. The example values that do appear in the
+    contracts — assetId e3d4e850-28a7-4045-b5d3-bb58cad202b4, asset name TA12345, TRU
+    serial HD12345, plate 1099176, commandId 05b419f2-f064-489d-ade7-8249839a23ed — are
+    OpenAPI documentation examples, not working test fixtures, and must not be used as
+    such.
+risk_note: >-
+  This matters more than usual on the 2-way command surface. There is no dry-run mode,
+  no idempotency key and no published sandbox, so the first time an integrator exercises
+  POST /v1/send-commands they are changing a setpoint, initiating a defrost or powering
+  a refrigeration unit on a real vehicle. Carrier's only stated safeguard is that
+  commands "should be executed only if TRU (cooling unit) is powered on."
+cross_links:
+  conventions: conventions/carrier-global-conventions.yml
+  authentication: authentication/carrier-global-authentication.yml
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

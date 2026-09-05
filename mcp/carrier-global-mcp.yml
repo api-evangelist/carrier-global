@@ -1,0 +1,165 @@
+generated: '2026-09-05'
+method: derived
+status: candidate
+source: >-
+  openapi/carrier-global-lynx-fleet-api-openapi.yaml,
+  openapi/carrier-global-lynx-2way-command-api-openapi.yaml,
+  openapi/carrier-global-lynx-container-api-openapi.yaml
+provider: Carrier Global
+providerId: carrier-global
+name: Carrier Lynx Fleet MCP (candidate)
+description: >-
+  A CANDIDATE tool list derived from Carrier's three published OpenAPI contracts.
+  Carrier ships no MCP server. Nothing here is running anywhere; this is a proposal
+  grounded in real operationIds so an agent builder can see what a Lynx MCP surface
+  would contain.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: derived
+  note: >-
+    SEARCHED AND NOT FOUND. No hosted MCP endpoint, no npx/pip package and no MCP
+    mention exists on the Lynx Dev Portal, in the integration guide, in the Dev Portal's
+    published JavaScript bundle, on npm, on PyPI, or in any Carrier GitHub organisation
+    (github.com/carrier, /carrier-global, /carrierglobal, /lynxfleet all 404). No
+    endpoint URL is guessed or probed, because a guessed MCP path that happens to
+    answer 200 would read as a verified agent surface.
+auth_model:
+  scheme: apiKey
+  header: x-lynx-api-key
+  note: >-
+    A Lynx MCP server would carry a single tenant API key. The key is entitlement-scoped
+    server-side (tenant, assets, data types), so an agent's reach is whatever Carrier
+    configured for that key — there is no per-tool scope to request.
+tools:
+  - name: list_assets
+    rest: asset-list-v1
+    method: GET
+    path: /v1/assets
+    contract: lynx-fleet
+    consequence: read
+    summary: Get the assets the API key is entitled to, optionally filtered by id, name, TRU serial or plate.
+  - name: get_asset_snapshots
+    rest: asset-snapshot-list-v1
+    method: GET
+    path: /v1/asset-snapshots
+    contract: lynx-fleet
+    consequence: read
+    summary: Latest state snapshot (status, temperature, position, alarms) for a list of assets.
+  - name: get_asset_history
+    rest: asset-history-list-v1
+    method: GET
+    path: /v1/asset-history-items
+    contract: lynx-fleet
+    consequence: read
+    summary: History for a single asset over a time window. One asset per request; 30-minute windows recommended.
+  - name: get_multi_asset_history
+    rest: multi-asset-history-v1
+    method: POST
+    path: /v1/multi-asset-history
+    contract: lynx-fleet
+    consequence: read
+    summary: History for up to 10 assets in one call. POST is used to carry the id list, not to write.
+  - name: list_asset_batteries
+    rest: asset-battery-list-v1
+    method: GET
+    path: /v1/asset-batteries
+    contract: lynx-fleet
+    consequence: read
+    summary: Current battery state for a list of assets.
+  - name: get_asset_battery_history
+    rest: asset-battery-history-list-v1
+    method: GET
+    path: /v1/asset-battery-history
+    contract: lynx-fleet
+    consequence: read
+    summary: Battery event history for one asset.
+  - name: get_multi_asset_battery_history
+    rest: multi-asset-battery-history-v1
+    method: POST
+    path: /v1/multi-asset-battery-history
+    contract: lynx-fleet
+    consequence: read
+    summary: Battery event history for several assets in one call.
+  - name: get_alarm_codes
+    rest: alarm-codes-and-descriptions-v1
+    method: GET
+    path: /v1/alarm-codes-and-descriptions
+    contract: lynx-fleet
+    consequence: read
+    summary: The alarm-code dictionary, for resolving codes seen on assets.
+  - name: ingest_scb_data
+    rest: scb-ingestor-v1
+    method: POST
+    path: /v1/scb-ingestor
+    contract: lynx-fleet
+    consequence: write
+    summary: Push third-party sensor data into the Lynx platform.
+  - name: ingest_orbcomm_data
+    rest: orbcomm-ingestor-v1
+    method: POST
+    path: /v1/orbcomm-ingestor
+    contract: lynx-fleet
+    consequence: write
+    summary: Push Orbcomm telematics messages into the Lynx platform.
+  - name: get_available_commands
+    rest: get-2way-commands
+    method: GET
+    path: /v1/get-commands
+    contract: 2way-command
+    consequence: read
+    summary: Which of the 14 two-way commands the asset actually supports. Read this before sending anything.
+  - name: send_command
+    rest: send-2way-commands
+    method: POST
+    path: /v1/send-commands
+    contract: 2way-command
+    consequence: physical-actuation
+    escalation: human-confirmation-recommended
+    summary: >-
+      Change a setpoint, initiate defrost or pre-trip, clear alarms, toggle a
+      compartment, or power the refrigeration unit on or off on a real vehicle.
+    warning: >-
+      No idempotency key, no dry-run, no cancel and no published sandbox. A retry can
+      double-fire a toggle. This is the tool that should never be auto-invoked without a
+      human in the loop.
+  - name: check_command_status
+    rest: check-2way-command-status
+    method: GET
+    path: /v1/check-command-status
+    contract: 2way-command
+    consequence: read
+    summary: Poll the outcome of a dispatched command by commandId.
+  - name: get_container_unified_model
+    rest: unified-model-v1
+    method: GET
+    path: /v1/api/core2/UnifiedModel
+    contract: container
+    consequence: read
+    summary: The container Unified Model property and alarm definitions.
+  - name: get_container_snapshot
+    rest: container-snapshot-v1
+    method: GET
+    path: /v1/api/core2/sourcelatestdata
+    contract: container
+    consequence: read
+    summary: Latest container telemetry.
+  - name: get_container_history
+    rest: container-asset-history-list-v1
+    method: GET
+    path: /v1/api/core2/container-asset-history-items
+    contract: container
+    consequence: read
+    summary: Container asset history items.
+coverage:
+  operations_total: 16
+  tools_proposed: 16
+  read_tools: 13
+  write_tools: 3
+crosswalk: mcp/carrier-global-tool-crosswalk.yml
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

@@ -1,0 +1,165 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/ (all three published Carrier LYNX contracts), the Lynx integration guide via
+  https://api.portal.fleet.lynx.carrier.io/public/graphql, Carrier's Product Security
+  pages at https://www.carrier.com/us/en/product-security.html and
+  https://www.carrier.com/us/en/product-security/report-an-issue.html, and the OIDC
+  discovery documents in well-known/
+provider: Carrier Global
+providerId: carrier-global
+scope: >-
+  Cross-cutting and industry standards asserted against what Carrier's published
+  contracts and pages actually declare. Every `conforms: false` here is a measured
+  absence, not a judgement.
+conformance:
+  - id: openapi-3.0
+    name: OpenAPI Specification 3.0.0
+    conforms: true
+    evidence: >-
+      All three published contracts declare `openapi: 3.0.0` and parse as valid
+      OpenAPI: openapi/carrier-global-lynx-fleet-api-openapi.yaml (10 operations),
+      openapi/carrier-global-lynx-2way-command-api-openapi.yaml (3),
+      openapi/carrier-global-lynx-container-api-openapi.yaml (3).
+  - id: rest
+    name: REST over HTTPS with JSON
+    conforms: true
+    evidence: >-
+      "The Lynx Fleet API uses REST and returns JSON-encoded responses. The API uses
+      standard HTTP response codes, authentication, and verbs." All operations are
+      HTTPS-only; plain HTTP is documented to fail.
+  - id: api-key-auth
+    name: API key authentication (header)
+    conforms: true
+    evidence: >-
+      components.securitySchemes.x-lynx-api-key — type apiKey, in header — applied via
+      a root-level security requirement in all three contracts.
+  - id: oauth2
+    name: OAuth 2.0 on the API
+    conforms: false
+    evidence: >-
+      No oauth2 securityScheme in any contract and no OAuth flow documented for API
+      access. OAuth/OIDC exists only for human portal sign-in through Carrier's Okta
+      tenant.
+  - id: oidc
+    name: OpenID Connect Discovery (portal identity)
+    conforms: true
+    scope: portal-sso-only
+    evidence: >-
+      https://carrier.okta.com/oauth2/ausezsnschc0QFWkt4x7/.well-known/openid-configuration
+      returns HTTP 200 with a complete OIDC discovery document (saved verbatim to
+      well-known/carrier-global-okta-lynx-app-openid-configuration.json). This is the
+      issuer the Lynx Dev Portal's own published bundle names as REACT_APP_OKTA_ISSUER.
+      It authenticates people into the portal; it does not authenticate API calls.
+  - id: rfc8414
+    name: OAuth 2.0 Authorization Server Metadata
+    conforms: true
+    scope: portal-sso-only
+    evidence: >-
+      https://carrier.okta.com/.well-known/oauth-authorization-server returns HTTP 200
+      with a full RFC 8414 document (85 scopes_supported), saved to
+      well-known/carrier-global-okta-oauth-authorization-server.json.
+  - id: rfc9457
+    name: 'RFC 9457: Problem Details for HTTP APIs'
+    conforms: false
+    evidence: >-
+      Errors are a bare {"message": string} object served as application/json. No
+      application/problem+json media type and none of type/title/status/detail/instance.
+      See errors/carrier-global-problem-types.yml.
+  - id: json-api
+    name: 'JSON:API'
+    conforms: false
+    evidence: No JSON:API media type, document structure or conventions in any contract.
+  - id: pagination
+    name: Cursor pagination
+    conforms: true
+    evidence: >-
+      limit (1–250, default 100) + nextToken (max 2048 chars) query parameters on the
+      list operations, with nextToken echoed in the response and reverse-chronological
+      ordering documented in the guide.
+  - id: idempotency
+    name: Idempotency keys on mutating operations
+    conforms: false
+    evidence: >-
+      No Idempotency-Key header or equivalent anywhere in the three contracts or the
+      guide, including on POST /v1/send-commands which actuates physical refrigeration
+      equipment. See conventions/carrier-global-conventions.yml.
+  - id: webhooks
+    name: Webhook / push event delivery
+    conforms: true
+    evidence: >-
+      Carrier documents a "Push API (Webhooks)" alongside the Pull API and describes
+      event subscription semantics. No AsyncAPI document or event schema is published.
+      See asyncapi/carrier-global-lynx-webhooks.yml.
+  - id: asyncapi
+    name: AsyncAPI
+    conforms: false
+    evidence: >-
+      No AsyncAPI document is published for the Push API. Probed /asyncapi.json and
+      /asyncapi.yaml paths return the docs host's HTML shell.
+  - id: rfc8594
+    name: 'RFC 8594: Sunset HTTP Header'
+    conforms: false
+    evidence: No Sunset or Deprecation header documented; no deprecation policy published.
+  - id: rfc9116
+    name: 'RFC 9116: security.txt'
+    conforms: false
+    evidence: >-
+      No /.well-known/security.txt on any Carrier host. Every 200 observed on that path
+      is a single-page-app or CMS catch-all body, recorded in
+      well-known/carrier-global-well-known.yml.
+  - id: tls-1-2-minimum
+    name: TLS 1.2 or higher required
+    conforms: true
+    evidence: >-
+      Published best practice: "All API requests must be made over HTTPS using TLS 1.2
+      or higher. The client must validate the server certificate." Probed hosts
+      negotiate TLSv1.3 — see security/carrier-global-domain-security.yml.
+  - id: cve-numbering-authority
+    name: CVE Numbering Authority (CNA)
+    conforms: true
+    evidence: >-
+      Carrier states on https://www.carrier.com/us/en/product-security.html that it
+      serves as a "CVE Numbering Authority (CNA)" and as a "Founding Member of the ISA
+      Global Cybersecurity Alliance", and publishes CVE-identified product security
+      advisories at https://www.carrier.com/us/en/product-security/advisories.html.
+  - id: coordinated-vulnerability-disclosure
+    name: Coordinated vulnerability disclosure (PSIRT)
+    conforms: true
+    evidence: >-
+      "The Carrier Product Security Incident Response Team (PSIRT) employs a
+      coordinated approach to vulnerability disclosure and publication", with a PGP
+      public key, a published key fingerprint and a 48-hour receipt acknowledgement.
+      See security/carrier-global-vulnerability-disclosure.yml.
+domain_standards:
+  assessed: true
+  declared_in_contract: []
+  note: >-
+    REWARD-ONLY CHECK, HONESTLY EMPTY. Carrier's markets — transport refrigeration
+    telematics, cold chain and commercial building automation — do have domain
+    standards (BACnet/ASHRAE 135 and Modbus on the controls side, GS1/EPCIS on the cold
+    chain side), and Carrier's i-Vu and Carrier Comfort Network products integrate over
+    BACnet at the equipment layer. But NONE of that is declared by the published API
+    contracts: there is no BACnet object model, no EPCIS event shape, no standard URN
+    or namespace, and no standards claim in info, servers, schemas or the guide. The
+    three Lynx contracts are a bespoke telematics data model. Nothing is asserted here
+    because nothing is declared, and inventing a conformance to fill this slot is
+    exactly the failure this field exists to prevent.
+compliance_programs:
+  - name: Carrier Product and Software Security Assurance
+    url: https://www.carrier.com/us/en/product-security.html
+    description: >-
+      Carrier's published product-security program, covering Secure Product
+      Development, Product Security Operations and Product Security Architecture, with
+      stated "Standards-Based Product Security Governance & Compliance" outcomes and
+      "Product Security Standards Compliance & Certification" as a named capability.
+    certifications_named: []
+    note: >-
+      Carrier describes a standards-based governance and certification capability but
+      does not name specific certifications (no SOC 2, ISO 27001, PCI or FedRAMP claim
+      is published on these pages), and there is no trust centre at trust.carrier.com
+      (NXDOMAIN). The program and the CNA status are the compliance evidence; the
+      certificate list is not published.
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

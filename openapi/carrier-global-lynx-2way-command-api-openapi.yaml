@@ -1,0 +1,549 @@
+openapi: 3.0.0
+components:
+  schemas:
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: >-
+            The request was unacceptable, often due to missing a required
+            parameter
+          example: No match found
+    AuthRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: No valid API key provided
+          example: Unauthorized
+    ForbiddenRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The API key doesn't have permissions to perform the request
+          example: Access to the requested resource is forbidden
+    TooManyRequestsError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: >-
+            Too many requests hit the API too quickly. We recommend exponential
+            backoff of your requests
+          example: Too Many Requests
+    UnexpectedError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Something went wrong on Stripe's end
+          example: Server Error
+    CommandsStatus:
+      type: object
+      description: Commands status
+      properties:
+        commandId:
+          type: string
+          example: 9283-98123-sfddsf-123vsd-sdsdf
+          description: Command id
+          readOnly: true
+        commandName:
+          type: string
+          example: CompartmentSetpoint1
+          description: Name of the sent command
+          readOnly: true
+        status:
+          type: string
+          example: SUCCESS
+          description: Command status
+          readOnly: true
+        assetId:
+          type: string
+          example: 1234-dfsd-324665-32423-23423-sdfsd
+          description: Asset id
+          readOnly: true
+        assetName:
+          type: string
+          example: Test
+          description: Asset name
+        deviceId:
+          type: string
+          example: 1234-casc-cdfs-3434-fdgf-3131
+          description: Device id
+          readOnly: true
+        deviceName:
+          type: string
+          example: '12345678'
+          description: Device name
+        responseOn:
+          type: string
+          example: '2021-08-20T08:23:16.634Z'
+          description: Response date
+          readOnly: true
+        tenantId:
+          type: string
+          example: 123f-123asdxz-asdzxc-8gd3-898sd
+          description: Tenant id
+          readOnly: true
+        createdBy:
+          type: string
+          example: test@email.com
+          description: Email of the person who executed the command
+          readOnly: true
+        createdOn:
+          type: string
+          example: '2021-08-20T08:23:07.737Z'
+          description: Creation date
+          readOnly: true
+    CommandsStatusList:
+      type: array
+      description: Commands status list
+      items:
+        $ref: '#/components/schemas/CommandsStatus'
+    AvailableCommandsResponse:
+      type: object
+      description: Commands Status
+      properties:
+        data:
+          type: object
+          description: Available commands statuses
+          properties:
+            CompartmentSetpoint1:
+              type: boolean
+              example: true
+              readOnly: true
+            CompartmentSetpoint2:
+              type: boolean
+              example: true
+              readOnly: true
+            CompartmentSetpoint3:
+              type: boolean
+              example: true
+              readOnly: true
+            RunMode:
+              type: boolean
+              example: true
+              readOnly: true
+            DefrostInitiation:
+              type: boolean
+              example: true
+              readOnly: true
+            ToggleCompartment1:
+              type: boolean
+              example: false
+              readOnly: true
+            ToggleCompartment2:
+              type: boolean
+              example: false
+              readOnly: true
+            ToggleCompartment3:
+              type: boolean
+              example: false
+              readOnly: true
+            ClearAlarms:
+              type: boolean
+              example: false
+              readOnly: true
+            InitiatePretrip:
+              type: boolean
+              example: false
+              readOnly: true
+            TRUOnOff:
+              type: boolean
+              example: false
+              readOnly: true
+            SleepMode:
+              type: boolean
+              example: false
+              readOnly: true
+            GetActiveIntellisetId:
+              type: boolean
+              example: false
+              readOnly: true
+            SetActiveIntelliset:
+              type: boolean
+              example: false
+              readOnly: true
+    Arguments:
+      type: object
+      description: Arguments
+      properties:
+        element:
+          type: string
+          description: Element
+          readOnly: false
+          example: test
+        valueType:
+          type: string
+          description: Value type
+          readOnly: false
+          example: number
+    Send2wayCmdRequestBody:
+      type: object
+      description: Send 2way command
+      required:
+        - assetId
+      properties:
+        assetId:
+          type: string
+          description: Asset id
+          example: 4323-sdjh-12fd-sdfa-3efv-2fdv
+        GetActiveIntellisetId:
+          type: number
+          description: Specific Compartment number to get Active Intelliset for.
+          example: 2
+        SetActiveIntelliset:
+          type: object
+          description: >-
+            Specify the active Intelliset (using its ID, between 1 and 31) for a
+            particular compartment (1, 2, or 3) using a JSON structure.
+          example:
+            compartmentNumber: 2
+            activeIntelliset: 3
+          properties:
+            compartmentNumber:
+              type: number
+              description: compartmentNumber
+              example: 2
+              readOnly: true
+            activeIntelliset:
+              type: number
+              description: activeIntelliset ID
+              example: 2
+              readOnly: true
+        CompartmentSetpoint1:
+          type: number
+          description: >-
+            Compartment 1 Setpoint Temperature with a range of [-30, 35] °C or
+            [-22, 95] °F
+          example: 10
+        CompartmentSetpoint2:
+          type: number
+          description: >-
+            Compartment 2 Setpoint Temperature with a range of [-30, 35] °C or
+            [-22, 95] °F
+          example: 15
+        CompartmentSetpoint3:
+          type: number
+          description: >-
+            Compartment 3 Setpoint Temperature with a range of [-30, 35] °C or
+            [-22, 95] °F
+          example: -5
+        ToggleCompartment1:
+          type: boolean
+          description: Toggle Compartment 1
+          example: false
+        ToggleCompartment2:
+          type: boolean
+          description: Toggle Compartment 2
+          example: false
+        ToggleCompartment3:
+          type: boolean
+          description: Toggle Compartment 3
+          example: false
+        DefrostInitiation:
+          type: boolean
+          description: Defrost Initiation
+          enum:
+            - true
+          example: true
+        RunMode:
+          type: string
+          description: Run Mode
+          enum:
+            - Continuous
+            - Start/Stop
+          example: Continuous
+        ClearAlarms:
+          type: boolean
+          description: Clear alarm for specific device
+          example: true
+        InitiatePretrip:
+          type: boolean
+          description: Pre trip
+          example: true
+        TRUOnOff:
+          type: string
+          description: TRU on/off
+          enum:
+            - 'ON'
+            - 'OFF'
+          example: 'ON'
+        SleepMode:
+          type: string
+          description: Sleep Mode
+          enum:
+            - 'ON'
+            - 'OFF'
+          example: 'ON'
+    SentCommand:
+      type: object
+      description: Information about sent command
+      properties:
+        commandId:
+          type: string
+          description: Command id
+          example: 12345-6789-1011-1213
+          readOnly: true
+        status:
+          type: string
+          description: Status of sent command
+          example: QUEUED
+          readOnly: true
+        commandName:
+          type: string
+          description: Name of the command sent in the request
+          example: CompartmentSetpoint1
+    Send2wayResponse:
+      type: object
+      description: Send 2way cmd
+      properties:
+        data:
+          type: array
+          description: Array of command ids and its statuses
+          items:
+            $ref: '#/components/schemas/SentCommand'
+  securitySchemes:
+    x-lynx-api-key:
+      type: apiKey
+      in: header
+      name: x-lynx-api-key
+info:
+  title: Carrier LYNX 2-way command Developer APIs
+  description: >
+    ![](https://images.carriercms.com/image/upload/h_150,q_100,f_auto/v1573562016/common/logos/carrier-corp-logo.png
+
+    "Carrier Logo")
+
+
+
+    This is the public API for Carrier LYNX.
+
+
+    - [Register Here](<https://fleet.lynx.carrier.io>)
+
+    - [API Documentation](/api-documentation)
+
+    - [Terms and Conditions](https://www.carrier.com/lynx/terms-of-use)
+
+
+    **Contact Us** <br>
+
+    &nbsp;&nbsp;E-mail: <lynxfleetadmin@carrier.com> &nbsp;&nbsp; © 2021 Carrier
+  version: 1.0.0
+paths:
+  /v1/check-command-status:
+    get:
+      operationId: check-2way-command-status
+      description: This operation will return commands status list
+      tags:
+        - core
+      parameters:
+        - name: assetId
+          in: query
+          description: >-
+            Asset id (optional,but one is required -  assetID, assetName or
+            truSerialNumber)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: uuid
+            example: a7f39dec-ca34-47d3-97a7-66bcfda0396b
+        - name: assetName
+          in: query
+          description: >-
+            Asset name (optional,but one is required -  assetID, assetName or
+            truSerialNumber)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: Sample Asset
+        - name: commandId
+          in: query
+          description: Command id
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: uuid
+            example: 05b419f2-f064-489d-ade7-8249839a23ed
+        - name: truSerialNumber
+          in: query
+          description: >-
+            Asset TRU serial number (optional,but one is required -  assetID,
+            assetName or truSerialNumber)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: HD12345
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandsStatusList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/get-commands:
+    get:
+      operationId: get-2way-commands
+      description: This operation will return list of available commands.
+      tags:
+        - core
+      parameters:
+        - name: assetId
+          in: query
+          description: >-
+            Asset id (optional, but one is required -  assetID, assetName or
+            truSerialNumber)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: uuid
+            example: a7f39dec-ca34-47d3-97a7-66bcfda0396b
+        - name: assetName
+          in: query
+          description: >-
+            Asset name (optional, but one is required -  assetID, assetName or
+            truSerialNumber)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: Sample Asset
+        - name: truSerialNumber
+          in: query
+          description: >-
+            Asset TRU serial number (optional, but one is required -  assetID,
+            assetName or truSerialNumber)
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            example: HD12345
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableCommandsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /v1/send-commands:
+    post:
+      operationId: send-2way-commands
+      description: This operation will send 2-way commands
+      tags:
+        - core
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Send2wayCmdRequestBody'
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Send2wayResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthRequestError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenRequestError'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequestsError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+security:
+  - x-lynx-api-key: []
+servers:
+  - url: https://api.fleet.lynx.carrier.io/2waycmd
+    description: prod

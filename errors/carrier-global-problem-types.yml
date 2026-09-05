@@ -1,0 +1,109 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  openapi/carrier-global-lynx-fleet-api-openapi.yaml,
+  openapi/carrier-global-lynx-2way-command-api-openapi.yaml,
+  openapi/carrier-global-lynx-container-api-openapi.yaml — enriched from the published
+  error reference in the Lynx integration guide
+  (https://api.portal.fleet.lynx.carrier.io/public/graphql → getPublicProductInfo →
+  guide.gettingStarted.errors)
+docs: https://doc-api.fleet.lynx.carrier.io/api-documentation
+provider: Carrier Global
+providerId: carrier-global
+format: proprietary
+rfc9457: false
+media_type: application/json
+envelope:
+  shape:
+    message: string
+  description: >-
+    "There will also be additional information about the error in the message attribute
+    in the response body." Every declared 4xx/5xx schema in all three contracts is a
+    single-property object with `message`. There is no machine-readable error code, no
+    error type URI, and no field-level validation detail — a consumer can branch on the
+    HTTP status but not on a stable error identifier.
+guidance: >-
+  "Carrier Lynx Fleet uses conventional HTTP response codes to indicate the success or
+  failure of an API request... We recommend writing code that gracefully handles all
+  possible API exceptions." Codes in the 200s indicate success, 400s an error, 500s a
+  server error (documented as rare).
+coverage:
+  contracts: 3
+  operations: 16
+  operations_with_4xx: 16
+  operations_with_5xx: 16
+  note: >-
+    Every one of the 16 published operations declares the full 400/401/403/429/500 set
+    plus 200. Response coverage is complete and uniform.
+problem_types:
+  - status: 400
+    name: BadRequestError
+    title: Bad Request
+    detail: The request was unacceptable, often due to missing a required parameter.
+    example_message: No match found
+    docs_description: The request was rejected, usually due to a missing or incorrect parameter.
+    remediation: >-
+      Check required parameter combinations. Most list operations require at least one
+      of assetIds / assetNames / truSerialNumbers / licensePlateNumbers on the command
+      APIs; a stale local asset cache is the documented common cause, which is why
+      Carrier advises re-syncing the asset list weekly.
+    retryable: false
+  - status: 401
+    name: AuthRequestError
+    title: Unauthorized
+    detail: No valid API key provided.
+    example_message: Unauthorized
+    docs_description: Invalid API key provided, or API key not provided.
+    remediation: >-
+      Send the tenant API key in the x-lynx-api-key header over HTTPS. Requests without
+      authentication and requests over plain HTTP both fail.
+    retryable: false
+  - status: 403
+    name: ForbiddenRequestError
+    title: Forbidden
+    detail: The API key doesn't have permissions to perform the request.
+    example_message: Access to the requested resource is forbidden
+    docs_description: API Key doesn't have permission to perform requests.
+    remediation: >-
+      The key is entitled per tenant, asset and data type through Lynx API
+      Configuration. Ask the Carrier Lynx Integration Team to extend the configuration
+      rather than retrying.
+    retryable: false
+  - status: 429
+    name: TooManyRequestsError
+    title: Too Many Requests
+    detail: >-
+      Too many requests hit the API too quickly. We recommend exponential backoff of
+      your requests.
+    example_message: Too Many Requests
+    docs_description: Too many requests hit the API too quickly.
+    remediation: >-
+      Back off exponentially with jitter. No Retry-After or RateLimit-* header is
+      documented, so the client must choose the interval itself. The published quota is
+      500,000 calls per month.
+    retryable: true
+  - status: 500
+    name: UnexpectedError
+    title: Server Error
+    detail: Server error.
+    example_message: Server Error
+    docs_description: 'Unexpected Error: server error (documented as rare).'
+    remediation: Retry with backoff; escalate to Lynx API Support if persistent.
+    retryable: true
+defects_observed:
+  - id: unexpectederror-description-names-stripe
+    where: components.schemas.UnexpectedError.properties.message.description
+    contracts:
+      - openapi/carrier-global-lynx-fleet-api-openapi.yaml
+      - openapi/carrier-global-lynx-2way-command-api-openapi.yaml
+      - openapi/carrier-global-lynx-container-api-openapi.yaml
+    observed: "Something went wrong on Stripe's end"
+    note: >-
+      Recorded verbatim as published, not corrected. All three Carrier contracts carry
+      a 500-response description naming Stripe — a copy-paste residue from the Stripe
+      error-model documentation the Lynx error reference was patterned on. It is
+      harmless at runtime but it is a real defect in a published contract and is the
+      kind of thing to raise with the provider rather than silently repair in our copy.
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

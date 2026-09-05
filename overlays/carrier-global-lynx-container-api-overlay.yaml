@@ -1,0 +1,62 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Carrier LYNX Container Developer APIs
+  version: 1.0.0
+extends: carrier-global-lynx-container-api-openapi.yaml
+x-generated: '2026-09-05'
+x-method: generated
+x-source: openapi/carrier-global-lynx-container-api-openapi.yaml
+x-note: This overlay records API Evangelist annotations only. It never contradicts the published contract
+  and it is never applied to the file in openapi/, which stays verbatim as Carrier serves it.
+actions:
+- target: $.info
+  description: Add the machine-readable contact and licence metadata Carrier states in prose inside info.description
+    but does not express as structured fields.
+  update:
+    contact:
+      name: Carrier Lynx Fleet Support
+      email: lynxfleetadmin@carrier.com
+      url: https://doc-api.fleet.lynx.carrier.io/
+    termsOfService: https://www.carrier.com/lynx/terms-of-use
+- target: $
+  description: Point at the Lynx Dev Portal as external documentation. The contract itself carries only
+    a relative link (/api-documentation) inside info.description, which does not resolve for a consumer
+    holding the file on disk.
+  update:
+    externalDocs:
+      description: Lynx Fleet Dev Portal
+      url: https://doc-api.fleet.lynx.carrier.io/api-documentation
+- target: $.paths['/v1/api/core2/UnifiedModel'].get
+  description: Supply the operation summary and/or tag the published contract omits; summary is the operation's
+    own description, restated, not new information.
+  update:
+    summary: This operation will return all assets
+    tags:
+    - core
+- target: $.paths['/v1/api/core2/sourcelatestdata'].get
+  description: Supply the operation summary and/or tag the published contract omits; summary is the operation's
+    own description, restated, not new information.
+  update:
+    summary: This operation will return all assets
+    tags:
+    - core
+- target: $.paths['/v1/api/core2/container-asset-history-items'].get
+  description: Supply the operation summary and/or tag the published contract omits; summary is the operation's
+    own description, restated, not new information.
+  update:
+    summary: This operation will return all assets
+    tags:
+    - core
+- target: $
+  description: Record the published rate limit on the document. Carrier publishes 500,000 calls per month
+    in the integration guide only; it appears nowhere in the contract, and there are no rate-limit response
+    headers.
+  update:
+    x-rate-limit:
+      quota: 500000
+      unit: calls
+      window: month
+      scope: per-key
+      exhaustion_status: 429
+      response_headers: []
+      source: https://doc-api.fleet.lynx.carrier.io/api-documentation

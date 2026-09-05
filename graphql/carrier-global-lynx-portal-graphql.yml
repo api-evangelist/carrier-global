@@ -1,0 +1,105 @@
+generated: '2026-09-05'
+method: probed
+source: https://api.portal.fleet.lynx.carrier.io/public/graphql
+name: Carrier Lynx Fleet Portal GraphQL (public)
+provider: Carrier Global
+providerId: carrier-global
+description: >-
+  The Lynx Fleet Dev Portal is a single-page app that renders its API reference from a
+  GraphQL backend. The `/public/graphql` endpoint on that backend answers anonymously
+  and is how the three published Lynx OpenAPI contracts in openapi/ were retrieved —
+  they are not served as static files anywhere on the docs host, which returns an
+  identical 604-byte HTML shell for /openapi.json, /swagger.json and every other
+  conventional spec path.
+endpoints:
+  - url: https://api.portal.fleet.lynx.carrier.io/public/graphql
+    access: anonymous
+    http_status: 200
+    note: >-
+      Confirmed live. POST {"query":"{__typename}"} returns {"data":{"__typename":"Query"}}
+      with HTTP 200.
+  - url: https://api.portal.fleet.lynx.carrier.io/graphql
+    access: authenticated
+    http_status: 401
+    note: 'Returns {"message":"Unauthorized"} without a session.'
+  - url: https://api.admin.fleet.lynx.carrier.io/public/graphql
+    access: unknown
+    http_status: 400
+    note: >-
+      Accepts POSTs but returns INTERNAL_SERVER_ERROR for every query attempted,
+      including __typename. Admin-plane endpoint; not usable anonymously.
+introspection:
+  enabled: false
+  probed: '2026-09-05'
+  evidence: >-
+    POST {"query":"{__schema{queryType{name}}}"} to
+    https://api.portal.fleet.lynx.carrier.io/public/graphql returns HTTP 400
+    {"errors":[{"message":"Internal Server Error. Code: INTERNAL_SERVER_ERROR."}]},
+    while {"query":"{__typename}"} on the same endpoint returns HTTP 200. Introspection
+    is disabled, so no SDL could be captured.
+  sdl_captured: false
+  note: >-
+    NO SDL IS RECORDED HERE. Introspection is off; writing a schema would be fabrication.
+    The operations below are the ones this pipeline actually executed against the live
+    endpoint and observed succeed — not a schema listing.
+operations_verified:
+  - name: getDefaultProducts
+    kind: query
+    arguments: none
+    http_status: 200
+    returns: >-
+      A map of business unit (TTI, LFC, TTA) to the API products published in the dev
+      portal, each with id, name, apiId, subscribed and description.
+  - name: getPrimaryProducts
+    kind: query
+    arguments: none
+    http_status: 200
+    returns: 'Empty object {} anonymously.'
+  - name: getPublicApiSpecYml
+    kind: query
+    arguments: 'productId: String!'
+    http_status: 200
+    returns: >-
+      { yamlContent } — the complete OpenAPI 3.0.0 document for that product. This is
+      the source of all three files in openapi/.
+  - name: getPublicApiSpecJson
+    kind: query
+    arguments: 'productId: String!'
+    http_status: not-probed
+    returns: >-
+      The same contract as a JSON object (openapi, info, components, paths, security,
+      servers). Declared in the portal bundle; the YML form was used instead.
+  - name: getPublicProductInfo
+    kind: query
+    arguments: 'productId: String!'
+    http_status: 200
+    returns: >-
+      { apiSpec, guide } — the contract plus the product's structured integration guide
+      (authentication, rate limiting, errors, pagination, versioning, best practices).
+      The guide is the documented source for conventions/, errors/, lifecycle/,
+      rate-limits/ and asyncapi/ in this repo.
+products:
+  - business_unit: TTI
+    id: 394a2e2a-3258-4bba-a77b-d0082658871e
+    name: tti-rest-api-proxy
+    apiId: wsyjys7akd
+    description: Lynx Fleet API
+    openapi: openapi/carrier-global-lynx-fleet-api-openapi.yaml
+  - business_unit: TTI
+    id: fe08addc-2c95-4a51-91a3-9669189f441f
+    name: tti-2way-cmd-proxy
+    apiId: 5yuy1z1ao9
+    description: Two way commands API
+    openapi: openapi/carrier-global-lynx-2way-command-api-openapi.yaml
+  - business_unit: LFC
+    id: c090377c-06e6-4ca0-b70a-7d5fe0bd37b3
+    name: container-rest-api
+    apiId: y32cdubzp5
+    description: Container API
+    openapi: openapi/carrier-global-lynx-container-api-openapi.yaml
+  - business_unit: TTA
+    products: []
+    note: No products published for the TTA business unit at probe time.
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com

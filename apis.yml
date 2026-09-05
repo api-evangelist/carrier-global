@@ -5,9 +5,13 @@ description: >-
   and intelligent building and cold-chain solutions, spanning HVAC, refrigeration,
   fire, security, and building automation technologies. Its digital ecosystem
   includes the Lynx Fleet telematics platform (Lynx APIs for transport
-  refrigeration units), the Abound building management platform, i-Vu and
-  Carrier Comfort Network for commercial building automation, and the Carrier
-  SmartHome app for residential smart thermostats.
+  refrigeration units and marine containers), the Abound building management
+  platform, i-Vu and Carrier Comfort Network for commercial building automation,
+  and the Carrier SmartHome app for residential smart thermostats. Lynx Fleet is
+  the only Carrier product publishing machine-readable API contracts: three
+  OpenAPI 3.0.0 documents covering 16 operations across truck/trailer telematics,
+  two-way refrigeration control and container telemetry, served through the
+  developer portal's public GraphQL backend rather than as static files.
 type: Index
 deliveryModel:
   model: unknown
@@ -44,7 +48,7 @@ tags:
   - Refrigeration
   - Fortune 500
 created: '2026-03-21'
-modified: '2026-04-23'
+modified: '2026-09-05'
 url: >-
   https://raw.githubusercontent.com/api-evangelist/carrier-global/refs/heads/main/apis.yml
 specificationVersion: '0.23'
@@ -52,13 +56,14 @@ apis:
   - aid: carrier-global:lynx-fleet-api
     name: Carrier Lynx Fleet API
     description: >-
-      REST API surface exposing Lynx Fleet telematics and control data for
-      diesel and electric transport refrigeration units (TRUs). Enables
-      systems integrators to pull asset inventory, setpoints, temperatures,
-      alarms, and GPS location, and to issue two-way commands to connected
-      refrigeration units directly from existing transport-management systems.
+      REST API surface exposing Lynx Fleet telematics data for diesel and electric
+      transport refrigeration units (TRUs). Ten operations covering asset inventory,
+      latest-state snapshots, asset and multi-asset history, battery state and battery
+      history, the alarm-code dictionary, and two ingestion endpoints for third-party
+      sensor (SCB) and Orbcomm telematics payloads. Cursor paginated with limit and
+      nextToken, authenticated with a tenant API key in the x-lynx-api-key header.
     humanURL: https://doc-api.fleet.lynx.carrier.io/
-    baseURL: https://doc-api.fleet.lynx.carrier.io/
+    baseURL: https://api.fleet.lynx.carrier.io
     tags:
       - Cold Chain
       - Telematics
@@ -66,14 +71,96 @@ apis:
       - Refrigeration
       - IoT
     properties:
+      - type: OpenAPI
+        url: openapi/carrier-global-lynx-fleet-api-openapi.yaml
+      - type: Overlay
+        url: overlays/carrier-global-lynx-fleet-api-overlay.yaml
       - type: Documentation
-        url: https://doc-api.fleet.lynx.carrier.io/api-documentation
+        url: https://doc-api.fleet.lynx.carrier.io/
+      - type: APIReference
+        url: https://api.tta.lynxfleet.carrier.com/apis
       - type: Portal
         url: https://api.tta.lynxfleet.carrier.com/
-      - type: Reference
-        url: https://doc-api.fleet.lynx.carrier.io/docs/lynx-prod-api/1/routes/v1/assets/get
+      - type: GettingStarted
+        url: https://doc-api.fleet.lynx.carrier.io/api-documentation
+      - type: TermsOfService
+        url: https://www.carrier.com/lynx/terms-of-use
       - type: Products
         url: https://api.tta.lynxfleet.carrier.com/products
+  - aid: carrier-global:lynx-2way-command-api
+    name: Carrier Lynx 2-way Command API
+    description: >-
+      Remote-control surface for Lynx-connected transport refrigeration units. Three
+      operations: list the commands a given asset supports, send one or more commands,
+      and check the status of a dispatched command by commandId. Commands include
+      per-compartment setpoints in the range -30 to 35 °C, compartment toggles, defrost
+      initiation, pre-trip initiation, alarm clearing, run mode, sleep mode, TRU power
+      and Intelliset selection. This is physical actuation: Carrier publishes no
+      idempotency key, no dry-run mode and no reversal operation for it.
+    humanURL: https://doc-api.fleet.lynx.carrier.io/
+    baseURL: https://api.fleet.lynx.carrier.io/2waycmd
+    tags:
+      - Cold Chain
+      - Refrigeration
+      - Remote Control
+      - Telematics
+      - IoT
+    properties:
+      - type: OpenAPI
+        url: openapi/carrier-global-lynx-2way-command-api-openapi.yaml
+      - type: Overlay
+        url: overlays/carrier-global-lynx-2way-command-api-overlay.yaml
+      - type: Documentation
+        url: https://doc-api.fleet.lynx.carrier.io/
+      - type: APIReference
+        url: https://api.tta.lynxfleet.carrier.com/apis
+  - aid: carrier-global:lynx-container-api
+    name: Carrier Lynx Container API
+    description: >-
+      Telemetry surface for Carrier-managed marine and intermodal refrigerated
+      containers, published as a separate contract with its own data model. Three
+      operations: the container Unified Model property and alarm definitions, latest
+      source data, and container asset history. Shares the x-lynx-api-key
+      authentication, the error envelope and the monthly call quota with the fleet API,
+      but shares none of its schemas.
+    humanURL: https://doc-api.fleet.lynx.carrier.io/
+    baseURL: https://api.fleet.lynx.carrier.io/coa
+    tags:
+      - Cold Chain
+      - Container
+      - Telematics
+      - Refrigeration
+      - IoT
+    properties:
+      - type: OpenAPI
+        url: openapi/carrier-global-lynx-container-api-openapi.yaml
+      - type: Overlay
+        url: overlays/carrier-global-lynx-container-api-overlay.yaml
+      - type: Documentation
+        url: https://doc-api.fleet.lynx.carrier.io/
+      - type: APIReference
+        url: https://api.tta.lynxfleet.carrier.com/apis
+  - aid: carrier-global:lynx-portal-graphql
+    name: Carrier Lynx Dev Portal GraphQL
+    description: >-
+      The GraphQL backend behind the Lynx Fleet Dev Portal. Its /public/graphql
+      endpoint answers anonymously and is the only way to reach Carrier's API
+      contracts and integration guides in machine-readable form — the docs host is a
+      single-page app that returns an HTML shell for every conventional spec path.
+      Verified queries: getDefaultProducts (the product catalogue),
+      getPublicApiSpecYml and getPublicApiSpecJson (the OpenAPI documents), and
+      getPublicProductInfo (contract plus structured guide). Introspection is disabled.
+    humanURL: https://doc-api.fleet.lynx.carrier.io/
+    baseURL: https://api.portal.fleet.lynx.carrier.io/public/graphql
+    tags:
+      - GraphQL
+      - Developer Portal
+      - Discovery
+    properties:
+      - type: GraphQL
+        url: graphql/carrier-global-lynx-portal-graphql.yml
+      - type: Documentation
+        url: https://doc-api.fleet.lynx.carrier.io/
   - aid: carrier-global:i-vu-building-automation
     name: Carrier i-Vu Building Automation
     description: >-
@@ -81,28 +168,28 @@ apis:
       monitoring and controlling HVAC, lighting, and related building systems.
       It integrates with BACnet and other standard building protocols rather
       than a public REST API surface.
-    humanURL: https://www.carrier.com/commercial/en/us/software/building-automation/i-vu-building-automation/
+    humanURL: https://www.carrier.com/commercial/en/us/products/controls/building-automation/
     tags:
       - Building Automation
       - BACnet
       - HVAC
     properties:
       - type: Documentation
-        url: https://www.carrier.com/commercial/en/us/software/building-automation/i-vu-building-automation/
+        url: https://www.carrier.com/commercial/en/us/products/controls/building-automation/
   - aid: carrier-global:carrier-comfort-network
     name: Carrier Comfort Network
     description: >-
       Carrier Comfort Network (CCN) is Carrier's proprietary control and
       communication network for tying together chillers, air handlers, and
       related HVAC equipment, typically integrated into BMS/BAS deployments.
-    humanURL: https://www.carrier.com/commercial/en/us/carrier-comfort-network/
+    humanURL: https://www.carrier.com/commercial/en/us/products/controls/carrier-comfort-network/
     tags:
       - Building Automation
       - HVAC
       - Chillers
     properties:
       - type: Documentation
-        url: https://www.carrier.com/commercial/en/us/carrier-comfort-network/
+        url: https://www.carrier.com/commercial/en/us/products/controls/carrier-comfort-network/
   - aid: carrier-global:abound-building-platform
     name: Carrier Abound
     description: >-
@@ -110,14 +197,14 @@ apis:
       aggregates data from HVAC, IAQ sensors, and occupancy systems to provide
       indoor-environmental-quality analytics, energy insights, and
       healthy-building dashboards for commercial real estate operators.
-    humanURL: https://www.carrier.com/commercial/en/us/software/abound/
+    humanURL: https://abound.carrier.com
     tags:
       - Building Intelligence
       - IAQ
       - Analytics
     properties:
       - type: Documentation
-        url: https://www.carrier.com/commercial/en/us/software/abound/
+        url: https://abound.carrier.com
   - aid: carrier-global:carrier-smarthome
     name: Carrier SmartHome App
     description: >-
@@ -125,45 +212,102 @@ apis:
       connected smart thermostats and residential HVAC equipment. No public
       developer API is currently published; integration is via the consumer
       mobile app and connected thermostat web portals.
-    humanURL: https://www.carrier.com/residential/en/us/smart-thermostats/smarthome-app/
+    humanURL: https://www.carrier.com/residential/en/us/products/thermostats/
     tags:
       - Smart Home
       - Thermostats
       - Residential
     properties:
       - type: Documentation
-        url: https://www.carrier.com/residential/en/us/smart-thermostats/smarthome-app/
+        url: https://www.carrier.com/residential/en/us/products/thermostats/
 common:
-  - type: DomainSecurity
-    url: security/carrier-global-domain-security.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/carrier
   - type: Website
     url: https://www.corporate.carrier.com
   - type: ConsumerSite
     url: https://www.carrier.com/us/en/
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/carrier
   - type: Documentation
-    name: Lynx Fleet API Documentation
+    name: Lynx Fleet Dev Portal
     url: https://doc-api.fleet.lynx.carrier.io/
-  - type: Portal
+  - type: DeveloperPortal
     name: Lynx Fleet Developer Portal
     url: https://api.tta.lynxfleet.carrier.com/
+  - type: APIReference
+    url: https://api.tta.lynxfleet.carrier.com/apis
   - type: GettingStarted
     url: https://doc-api.fleet.lynx.carrier.io/api-documentation
-  - type: Abound
-    url: https://www.carrier.com/commercial/en/us/software/abound/
-  - type: BuildingAutomation
-    url: https://www.carrier.com/commercial/en/us/software/building-automation/i-vu-building-automation/
-  - type: SmartHome
-    url: https://www.carrier.com/residential/en/us/smart-thermostats/smarthome-app/
+  - type: SignUp
+    name: Lynx Fleet Developer Portal sign in
+    url: https://api.tta.lynxfleet.carrier.com/signin
+  - type: Support
+    url: https://www.corporate.carrier.com/contact-us/
+  - type: Blog
+    name: Carrier News
+    url: https://www.corporate.carrier.com/news/
+  - type: TermsOfService
+    url: https://www.corporate.carrier.com/legal/terms-of-use/
+  - type: PrivacyPolicy
+    url: https://www.corporate.carrier.com/legal/privacy-notice/
+  - type: Security
+    name: Carrier PSIRT — report a vulnerability
+    url: https://www.carrier.com/us/en/product-security/report-an-issue.html
+  - type: Compliance
+    name: Carrier Product and Software Security Assurance
+    url: https://www.carrier.com/us/en/product-security.html
+  - type: Authentication
+    url: authentication/carrier-global-authentication.yml
+  - type: Conventions
+    url: conventions/carrier-global-conventions.yml
+  - type: ErrorCatalog
+    url: errors/carrier-global-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/carrier-global-lifecycle.yml
+  - type: Conformance
+    url: conformance/carrier-global-conformance.yml
+  - type: DataModel
+    url: data-model/carrier-global-data-model.yml
+  - type: RateLimits
+    url: rate-limits/carrier-global-rate-limits.yml
+  - type: Plans
+    url: plans/carrier-global-plans-pricing.yml
+  - type: FinOps
+    url: finops/carrier-global-finops.yml
+  - type: Vocabulary
+    url: vocabulary.yml
+  - type: Sandbox
+    name: Lynx Fleet Dev Portal interactive API console
+    url: sandbox/carrier-global-sandbox.yml
+  - type: Webhooks
+    name: Lynx Push API (documented webhook surface)
+    url: asyncapi/carrier-global-lynx-webhooks.yml
+  - type: Packages
+    url: packages/carrier-global-packages.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: ToolCrosswalk
+    url: mcp/carrier-global-tool-crosswalk.yml
+  - type: X-MCPServerCandidate
+    url: mcp/carrier-global-mcp.yml
+  - type: WellKnown
+    url: well-known/carrier-global-well-known.yml
+  - type: DomainSecurity
+    url: security/carrier-global-domain-security.yml
+  - type: VulnerabilityDisclosure
+    url: security/carrier-global-vulnerability-disclosure.yml
+  - type: LLMsTxt
+    url: llms/carrier-global-llms.txt
   - type: InvestorRelations
     url: https://ir.carrier.com
   - type: Careers
-    url: https://careers.corporate.carrier.com
+    url: https://www.corporate.carrier.com/careers/
   - type: Contact
     url: https://www.corporate.carrier.com/contact-us/
-  - type: LlmsText
-    url: https://doc-api.fleet.lynx.carrier.io/llms.txt
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 29
+  pass: local-v3

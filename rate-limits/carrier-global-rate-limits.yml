@@ -4,49 +4,81 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Carrier Global
 providerId: carrier-global
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
-reconciled: false
+modified: '2026-09-05'
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://api.portal.fleet.lynx.carrier.io/public/graphql (getPublicProductInfo →
+  guide.gettingStarted.rateLimiting), plus the 429 responses declared on every
+  operation in openapi/
+docs: https://doc-api.fleet.lynx.carrier.io/api-documentation
+reconciled: true
 tags:
   - HVAC
   - IoT
   - Telematics
-  - Building Automation
+  - Cold Chain
   - Rate Limiting
-description: Carrier Global does not publish public per-second or per-minute rate limits for the Lynx
-  Fleet, Abound, i-Vu, or Carrier Comfort Network APIs. Limits are configured per customer credential
-  and dimensioned by tracked-asset count rather than raw request rate.
-notes: No public rate-limit documentation found on the Lynx, Abound, or i-Vu doc portals. Treat as customer-contract-defined.
-sources:
-  - https://doc-api.fleet.lynx.carrier.io/
-  - https://www.corporate.carrier.com/
+description: >-
+  Carrier publishes one hard number for the Lynx APIs — 500,000 calls per month across
+  the tenant's key — and no runtime rate-limit headers. Every one of the 16 published
+  operations declares a 429 response, so exhaustion is contractually visible, but a
+  client cannot see how much budget is left without tracking it itself.
+notes: >-
+  Upgraded from a 2026-05-04 bulk-sweep placeholder that recorded "no public rate-limit
+  documentation found". The limit IS published; it was only reachable through the Dev
+  Portal's public GraphQL backend, because the docs host serves an HTML shell for every
+  URL. This is a monthly quota rather than a per-second window: the guide frames rate
+  limiting as spike protection, and Carrier does not publish a burst ceiling.
 responseCodes:
   throttled: 429
+limit_count: 1
 limits:
-  - name: Lynx Fleet (per-customer)
-    scope: customer
-    metric: varies
-    limit: see Lynx Fleet onboarding
-  - name: Abound (per-tenant)
-    scope: tenant
-    metric: varies
-    limit: see Abound onboarding
-  - name: i-Vu / Comfort Network
-    scope: site
-    metric: varies
-    limit: see installer documentation
+  - name: Lynx API monthly call quota
+    scope: per-key
+    subject: tenant API key (x-lynx-api-key)
+    window: month
+    limit: 500000
+    unit: calls
+    burst: not published
+    overage: >-
+      "Excess usage may incur additional charges. If you require a higher limit, please
+      contact the Carrier Lynx Integration Team."
+    applies_to:
+      - openapi/carrier-global-lynx-fleet-api-openapi.yaml
+      - openapi/carrier-global-lynx-2way-command-api-openapi.yaml
+      - openapi/carrier-global-lynx-container-api-openapi.yaml
+    source: >-
+      "API usage is limited to 500,000 calls per month." (Lynx integration guide,
+      Rate Limiting, verbatim)
+response_headers:
+  documented: []
+  x_ratelimit: false
+  ratelimit_rfc: false
+  retry_after: false
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented or declared in
+    any contract. The only runtime signal is the 429 status itself, so an agent gets a
+    stop signal but no remaining-budget signal and no server-chosen retry delay.
 policies:
-  - name: Asset-scoped polling
-    description: Lynx Fleet APIs reward periodic polling per-asset rather than burst reads; align polling
-      to the documented telemetry cadence.
-  - name: Backoff strategy
-    description: Implement exponential backoff with jitter on 429 responses; coordinate batch operations
-      with the Carrier technical contact.
-  - name: Two-way command safety
-    description: Two-way refrigeration commands have stricter throttling and require idempotency safeguards
-      to avoid double-actuation on retried requests.
+  - name: Exponential backoff
+    description: >-
+      The 429 schema itself instructs consumers: "Too many requests hit the API too
+      quickly. We recommend exponential backoff of your requests." Best practices add a
+      30-second call timeout and retry-with-backoff on transient failures.
+  - name: Cadence guidance instead of headers
+    description: >-
+      Carrier substitutes published polling cadence for runtime headers — 30-minute
+      recommended query duration for history and snapshot reads, and the Push API
+      (webhooks) for anything more frequent than 30 minutes.
+  - name: Cache the asset list
+    description: >-
+      "Sync your asset list once a week to keep your cache current and avoid 400-level
+      asset id errors. This also protects your API Calls quota."
+  - name: Batch where the contract allows
+    description: >-
+      multi-asset-history accepts 10 assets per request and asset-history-items accepts
+      1; batching is the documented way to stay inside the monthly quota.
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com

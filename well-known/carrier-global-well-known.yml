@@ -1,0 +1,241 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Live anonymous GET probes of /.well-known/* and /llms.txt on every host this record
+  knows: the registrable domains (carrier.com, corporate.carrier.com), the Lynx Fleet
+  API host from OpenAPI servers[] (api.fleet.lynx.carrier.io), the developer docs host
+  (doc-api.fleet.lynx.carrier.io), the public GraphQL host
+  (api.portal.fleet.lynx.carrier.io), the Azure API Management developer portal
+  (api.tta.lynxfleet.carrier.com), the Lynx Fleet application host
+  (fleet.lynx.carrier.io) and Carrier's Okta identity tenant (carrier.okta.com).
+note: >-
+  Carrier's Okta tenant is included because the Lynx Fleet Dev Portal's own published
+  JavaScript bundle
+  (https://doc-api.fleet.lynx.carrier.io/assets/index-sBn41eY2.js) sets
+  REACT_APP_OKTA_ISSUER to https://carrier.okta.com/oauth2/ausezsnschc0QFWkt4x7 — the
+  authorization server for Carrier's own portal lives on a third host, which is the
+  case this probe is explicitly required to follow. Everything served from
+  doc-api.fleet.lynx.carrier.io, fleet.lynx.carrier.io and www.carrier.com under
+  /.well-known/* is the site's single-page-app catch-all (an identical HTML body for
+  every path, 604 / 468 / 44869 bytes respectively) — recorded as HTML shells, not
+  documents, and therefore treated as misses. api.fleet.lynx.carrier.io answers 401
+  application/json on every path including /.well-known/*, so absence cannot be
+  distinguished from key-gating there.
+hosts:
+  - host: carrier.okta.com
+    note: >-
+      Carrier's Okta identity tenant. Serves real RFC 8414 / OpenID Connect Discovery
+      documents anonymously. This is the identity surface behind the Lynx Fleet portal
+      sign-in, not the public REST API (which authenticates with an x-lynx-api-key
+      header and publishes no OAuth surface).
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: carrier-global-okta-openid-configuration.json
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: carrier-global-okta-oauth-authorization-server.json
+      - path: /.well-known/security.txt
+        status: 405
+      - path: /.well-known/api-catalog
+        status: 405
+      - path: /.well-known/oauth-protected-resource
+        status: 405
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+  - host: carrier.okta.com/oauth2/ausezsnschc0QFWkt4x7
+    note: >-
+      The Lynx Fleet application's own Okta authorization server, named verbatim in the
+      dev portal's published bundle as REACT_APP_OKTA_ISSUER.
+    documents:
+      - path: /oauth2/ausezsnschc0QFWkt4x7/.well-known/openid-configuration
+        status: 200
+        file: carrier-global-okta-lynx-app-openid-configuration.json
+  - host: api.fleet.lynx.carrier.io
+    note: >-
+      OpenAPI servers[] host for all three published Lynx contracts. Returns 401
+      application/json ({"message":"Unauthorized"}) on every path probed, including
+      every /.well-known/* path — a key-gated gateway, so these are neither hits nor
+      confirmed absences.
+    documents:
+      - path: /.well-known/security.txt
+        status: 401
+      - path: /.well-known/openid-configuration
+        status: 401
+      - path: /.well-known/oauth-authorization-server
+        status: 401
+      - path: /.well-known/oauth-protected-resource
+        status: 401
+      - path: /.well-known/api-catalog
+        status: 401
+      - path: /.well-known/ai-plugin.json
+        status: 401
+      - path: /.well-known/agent-card.json
+        status: 401
+      - path: /.well-known/agent.json
+        status: 401
+      - path: /llms.txt
+        status: 401
+  - host: doc-api.fleet.lynx.carrier.io
+    note: >-
+      Lynx Fleet Dev Portal. Vite single-page app; every path below returns the same
+      604-byte HTML shell with HTTP 200. Not documents.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        result: html-shell
+      - path: /.well-known/openid-configuration
+        status: 200
+        result: html-shell
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        result: html-shell
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        result: html-shell
+      - path: /.well-known/api-catalog
+        status: 200
+        result: html-shell
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent-card.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent.json
+        status: 200
+        result: html-shell
+      - path: /llms.txt
+        status: 200
+        result: html-shell
+  - host: fleet.lynx.carrier.io
+    note: Lynx Fleet application. 468-byte SPA shell on every path. Not documents.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        result: html-shell
+      - path: /.well-known/openid-configuration
+        status: 200
+        result: html-shell
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        result: html-shell
+      - path: /.well-known/api-catalog
+        status: 200
+        result: html-shell
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent-card.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent.json
+        status: 200
+        result: html-shell
+      - path: /llms.txt
+        status: 200
+        result: html-shell
+  - host: api.tta.lynxfleet.carrier.com
+    note: >-
+      Azure API Management developer portal for Lynx Fleet. Clean 404s — the only host
+      in this record that answers the probe honestly.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+  - host: api.portal.fleet.lynx.carrier.io
+    note: >-
+      Public GraphQL host that serves the three OpenAPI contracts. 404 on every
+      well-known path.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+  - host: www.carrier.com
+    note: >-
+      Consumer site. Every path returns HTTP 200 with the identical 44,869-byte page —
+      a soft-200 catch-all, not documents.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        result: html-shell
+      - path: /.well-known/openid-configuration
+        status: 200
+        result: html-shell
+      - path: /.well-known/api-catalog
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent-card.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent.json
+        status: 200
+        result: html-shell
+      - path: /llms.txt
+        status: 200
+        result: html-shell
+  - host: www.corporate.carrier.com
+    note: >-
+      Corporate site. Mixed 200/404 but every body is the same ~69KB rendered page —
+      soft-404s, not documents.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        result: html-shell
+      - path: /.well-known/api-catalog
+        status: 200
+        result: html-shell
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        result: html-shell
+      - path: /llms.txt
+        status: 200
+        result: html-shell
+summary:
+  documents_served: 3
+  security_txt: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false
+  openid_configuration: true
+  oauth_authorization_server: true
