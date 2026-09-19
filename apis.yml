@@ -134,6 +134,8 @@ apis:
   humanURL: https://doc-api.fleet.lynx.carrier.io/
   baseURL: https://api.fleet.lynx.carrier.io
   tags:
+  - Core
+  tags_raw:
   - core
   properties:
   - type: OpenAPI
