@@ -1,0 +1,33 @@
+{
+  "provider": "carrier-global",
+  "sources": [
+    "_original/carrier-global-lynx-2way-command-api-openapi.yaml",
+    "_original/carrier-global-lynx-container-api-openapi.yaml",
+    "_original/carrier-global-lynx-fleet-api-openapi.yaml"
+  ],
+  "outputs": [
+    "carrier-global-core-api-openapi.yml",
+    "carrier-global-core2-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "carrier-global-lynx-2way-command-api-openapi.yaml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "carrier-global-lynx-2way-command-api-openapi.yaml: declared missing tag: core",
+    "carrier-global-lynx-container-api-openapi.yaml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "carrier-global-lynx-container-api-openapi.yaml: tagged paths GET /v1/api/core2/UnifiedModel -> Core2",
+    "carrier-global-lynx-container-api-openapi.yaml: tagged paths GET /v1/api/core2/sourcelatestdata -> Core2",
+    "carrier-global-lynx-container-api-openapi.yaml: tagged paths GET /v1/api/core2/container-asset-history-items -> Core2",
+    "carrier-global-lynx-container-api-openapi.yaml: declared missing tag: Core2",
+    "carrier-global-lynx-fleet-api-openapi.yaml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "carrier-global-lynx-fleet-api-openapi.yaml: declared missing tag: core",
+    "tag 'core' spans 2 source specs (carrier-global-lynx-2way-command-api-openapi.yaml, carrier-global-lynx-fleet-api-openapi.yaml): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "carrier-global-core-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "carrier-global-core2-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
