@@ -115,6 +115,7 @@ apis:
   - type: Documentation
     url: https://abound.carrier.com
 - aid: carrier-global:carrier-smarthome
+  x-published: false
   name: Carrier SmartHome App
   description: >-
     The Carrier SmartHome app lets homeowners remotely control Carrier connected smart thermostats and
