@@ -264,54 +264,63 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AuthRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: No valid API key provided
-          example: Unauthorized
-    UnifiedModelAlarm:
+    UnifiedModelProperty:
       type: object
       required:
       - Key
-      - AlarmNo
+      - Name
       - Description
-      - Manufacturer
+      - Type
       description: Represents all information about asset
       properties:
         Key:
           type: string
           description: COA identifier
           readOnly: false
-          example: a0
-        AlarmNo:
+          example: p5
+        Name:
           type: string
-          description: The unique alarm code
+          description: COA Property name
           readOnly: false
-          example: '1'
+          example: Device name
         Description:
           type: string
-          description: COA Alarm description
+          description: COA Property description
           readOnly: false
-          example: Supply air sensor circuit
-        Manufacturer:
+          example: The name of the device
+        Type:
           type: string
-          example: Thermoking
+          example: String
           readOnly: false
-          description: Alarm manufacturer
-    UnifiedModelList:
-      type: array
-      description: List of UnifiedModel objects
-      items:
-        oneOf:
-        - $ref: '#/components/schemas/UnifiedModelProperty'
-        - $ref: '#/components/schemas/UnifiedModelAlarm'
-    SourceDataHistoryList:
-      type: array
-      description: List of Asset history arrays
-      items:
-        $ref: '#/components/schemas/SourceDataList'
+          description: Data type
+          enum:
+          - String
+          - Float
+          - DateTime
+          - Boolean
+          - Enum
+          - Integer
+        Unit:
+          type:
+          - string
+          - 'null'
+          example: CelciusDegrees
+          readOnly: false
+          description: Measure unit
+    TooManyRequestsError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Too many requests hit the API too quickly. We recommend exponential backoff of your requests
+          example: Too Many Requests
+    UnexpectedError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Something went wrong on Stripe's end
+          example: Server Error
     SourceData:
       type: object
       required:
@@ -356,63 +365,47 @@ components:
           type: object
           readOnly: false
           description: Array of alarm ids with their corresponding descriptions
-    TooManyRequestsError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Too many requests hit the API too quickly. We recommend exponential backoff of your requests
-          example: Too Many Requests
-    BadRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The request was unacceptable, often due to missing a required parameter
-          example: No match found
-    UnifiedModelProperty:
+    SourceDataHistoryList:
+      type: array
+      description: List of Asset history arrays
+      items:
+        $ref: '#/components/schemas/SourceDataList'
+    UnifiedModelList:
+      type: array
+      description: List of UnifiedModel objects
+      items:
+        oneOf:
+        - $ref: '#/components/schemas/UnifiedModelProperty'
+        - $ref: '#/components/schemas/UnifiedModelAlarm'
+    UnifiedModelAlarm:
       type: object
       required:
       - Key
-      - Name
+      - AlarmNo
       - Description
-      - Type
+      - Manufacturer
       description: Represents all information about asset
       properties:
         Key:
           type: string
           description: COA identifier
           readOnly: false
-          example: p5
-        Name:
+          example: a0
+        AlarmNo:
           type: string
-          description: COA Property name
+          description: The unique alarm code
           readOnly: false
-          example: Device name
+          example: '1'
         Description:
           type: string
-          description: COA Property description
+          description: COA Alarm description
           readOnly: false
-          example: The name of the device
-        Type:
+          example: Supply air sensor circuit
+        Manufacturer:
           type: string
-          example: String
+          example: Thermoking
           readOnly: false
-          description: Data type
-          enum:
-          - String
-          - Float
-          - DateTime
-          - Boolean
-          - Enum
-          - Integer
-        Unit:
-          type:
-          - string
-          - 'null'
-          example: CelciusDegrees
-          readOnly: false
-          description: Measure unit
+          description: Alarm manufacturer
     ForbiddenRequestError:
       type: object
       properties:
@@ -420,13 +413,20 @@ components:
           type: string
           description: The API key doesn't have permissions to perform the request
           example: Access to the requested resource is forbidden
-    UnexpectedError:
+    AuthRequestError:
       type: object
       properties:
         message:
           type: string
-          description: Something went wrong on Stripe's end
-          example: Server Error
+          description: No valid API key provided
+          example: Unauthorized
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The request was unacceptable, often due to missing a required parameter
+          example: No match found
     SourceDataList:
       type: object
       description: List of Asset history objects
