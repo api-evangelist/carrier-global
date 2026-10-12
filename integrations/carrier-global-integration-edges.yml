@@ -1,0 +1,55 @@
+edges:
+- partner_name: OpenADR
+  partner: null
+  type: contract
+  channel: network-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://products.openadr.org/
+  contract_reference:
+    register: OpenADR Alliance certified product database
+    spec_file: null
+    role: certified-product
+    registered_name: Automated Logic Corporation
+    matched_domain: carrier.com
+    certified_products:
+    - product: Carrier i-Vu Automated Demand Response Add-on
+      type: VEN (client)
+      lapsed: false
+      profile: 2.0a+b
+      page: https://products.openadr.org/product/automated-logic-corporation-carrier-i-vu-automated-demand-response-add-on/
+    - product: Carrier Smart Thermostat, Carrier Smart Thermostat Featuring InteliSense™
+      type: VEN
+      lapsed: false
+      profile: 2.0b
+      page: https://products.openadr.org/product/carrier-carrier-smart-thermostat/
+    - product: ClimaVision
+      type: VEN
+      lapsed: false
+      profile: 2.0b
+      page: https://products.openadr.org/product/carrier-climavision/
+    - product: Connect Pro Stat, Connect Plus Stat, Wi-Fi Pro Stat, Wi-Fi Plus Stat
+      type: VEN
+      lapsed: false
+      profile: 2.0b
+      page: https://products.openadr.org/product/carrier-connect-pro-stat-connect-plus-stat-wi-fi-pro-stat-wi-fi-plus-stat/
+    - product: Infinity, Evolution Connex, Ion
+      type: VEN (client)
+      lapsed: false
+      profile: 2.0b
+      page: https://products.openadr.org/product/carrier-corp-infinity-evolution-connex-ion/
+    - product: Infinity System Control, Evolution Connex System Control, Ion System Control
+      type: VEN (client)
+      lapsed: false
+      profile: 2.0a
+      page: https://products.openadr.org/product/carrier-corporation-infinity-system-control-evolution-connex-system-control-ion-system-control/
+    profiles:
+    - 2.0a
+    - 2.0a+b
+    - 2.0b
+    detected_by: sweep-energy.py
+    detected: '2026-10-13'
+generated: '2026-10-13'
+method: searched
+checked:
+- https://products.openadr.org/
