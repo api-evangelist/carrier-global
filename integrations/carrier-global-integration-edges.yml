@@ -1,4 +1,19 @@
 edges:
+- partner_name: AWS Marketplace
+  partner: amazon-web-services
+  partner_match: aggregator
+  type: marketplace
+  marketplace: aws-marketplace
+  channel: distribution
+  relationship: platform-app
+  direction: provider-built
+  evidence: https://aws.amazon.com/marketplace/seller-profile?id=seller-ksoapqghydcfe
+  listing_count: 1
+  apps:
+  - Abound™ Digital Platform
+  seller_name: Carrier
+  detected_by: sweep-cloud-marketplaces.py
+  detected: '2026-10-13'
 - partner_name: OpenADR
   partner: null
   type: contract
@@ -49,21 +64,6 @@ edges:
     - 2.0b
     detected_by: sweep-energy.py
     detected: '2026-10-13'
-- partner_name: AWS Marketplace
-  partner: amazon-web-services
-  partner_match: aggregator
-  type: marketplace
-  marketplace: aws-marketplace
-  channel: distribution
-  relationship: platform-app
-  direction: provider-built
-  evidence: https://aws.amazon.com/marketplace/seller-profile?id=seller-ksoapqghydcfe
-  listing_count: 1
-  apps:
-  - Abound™ Digital Platform
-  seller_name: Carrier
-  detected_by: sweep-cloud-marketplaces.py
-  detected: '2026-10-13'
 generated: '2026-10-13'
 method: searched
 checked:
