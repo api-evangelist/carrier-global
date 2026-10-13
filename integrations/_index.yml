@@ -56,3 +56,15 @@
     detected: '2026-10-13'
   status: not-a-workflow
   arazzo: null
+- slug: carrier-global-aws-marketplace
+  label: AWS Marketplace
+  partner: amazon-web-services
+  partner_name: AWS Marketplace
+  type: marketplace
+  marketplace: aws-marketplace
+  channel: distribution
+  evidence: https://aws.amazon.com/marketplace/seller-profile?id=seller-ksoapqghydcfe
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
