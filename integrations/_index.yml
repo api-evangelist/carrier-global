@@ -68,3 +68,16 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: carrier-global-servicetitan-own
+  label: ServiceTitan (own)
+  partner: servicetitan
+  partner_name: ServiceTitan (own)
+  category: Suppliers, Catalogs & Pricebooks, Leads & Bookings
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.servicetitan.com/partner/carrier
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

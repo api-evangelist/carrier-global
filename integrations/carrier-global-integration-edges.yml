@@ -64,9 +64,29 @@ edges:
   seller_name: Carrier
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: ServiceTitan (own)
+  partner: servicetitan
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.servicetitan.com/partner/carrier
+  mirror_of: servicetitan/integrations/servicetitan-integration-edges.yml
+  apps:
+  - Carrier
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Suppliers, Catalogs & Pricebooks, Leads & Bookings
 generated: '2026-10-13'
 method: searched
 checked:
 - https://aws.amazon.com/marketplace/
 - https://products.openadr.org/
+- servicetitan/integrations/servicetitan-integration-edges.yml
 marketplace_apps: []
+source:
+- servicetitan/integrations/servicetitan-integration-edges.yml
