@@ -81,3 +81,155 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: carrier-global-bacnet-testing-laboratories-btl-listed
+  label: BACnet Testing Laboratories (BTL Listed)
+  partner_name: BACnet Testing Laboratories (BTL Listed)
+  category: building automation
+  type: register
+  channel: standard-directory
+  evidence: https://www.bacnetinternational.net/btl/?m=28
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: BTL Listing of Tested Products (bacnetinternational.net/btl)
+    spec_file: null
+    standard: BACnet (BTL)
+    role: btl-listed-manufacturer
+    registered_name: Carrier Corporation
+    website: http://www.carrier.com/carrier/en/worldwide/?location=us
+    matched_domain: carrier.com
+    matched_by: domain+verified
+    btl_manufacturer_ids:
+    - '28'
+    certified_products:
+    - product: BACnet Advanced Operator Workstation (B-AWS)
+      lapsed: false
+      listed_products:
+      - i-Vu Pro User Interface
+      - i-Vu Pro User interface
+    - product: BACnet Building Controller (B-BC)
+      lapsed: false
+      listed_products:
+      - TruVu MPC Controller
+      - TruVu MPC Controller, non-routing
+      - TruVu MPC Processor
+      - TruVu™ BACnet Advanced Application Controller
+      - TruVu™ Chilled Water System Optimizer
+      - TruVu™ ChillerVu™ Plant Controller
+      - TruVu™ Compact Link BACnet Integrator
+      - TruVu™ Product Integrated Controller
+      - i-Vu™ XT BACnet Link
+      - iVu XT BACnet Link
+    - product: BACnet Advanced Application Controller (B-AAC)
+      lapsed: false
+      listed_products:
+      - Carrier AppController
+      - Carrier Chiller Plant Controller
+      - Carrier Fan Coil Open
+      - Carrier MPC Open XPC
+      - Carrier RTU Open
+      - Carrier RTU-MP
+      - Carrier UC Open Controller
+      - Carrier UC Open XP
+      - Carrier UPC Open
+      - Carrier Unit Vent Open
+      - Carrier VAV Fan Terminal
+      - Carrier VAV Fan Terminal II
+    - product: BACnet Application Specific Controller (B-ASC)
+      lapsed: false
+      listed_products:
+      - Carrier Connect FX Wi-Fi Thermostat
+      - Carrier Connect ProF Wi-Fi Thermostat
+      - Carrier Connect Wi-Fi Thermostat
+      - Carrier i-Vu Chilled Water System Optimizer
+      - Configurable BACnet Thermostat
+      - Connect™ ProF Wifi Thermostat
+      - WTC BACnet Series
+    - product: BACnet Router (B-RTR)
+      lapsed: false
+      listed_products:
+      - TruVu MPC Controller
+      - TruVu MPC Processor
+      - TruVu™ Chilled Water System Optimizer
+      - TruVu™ ChillerVu™ Plant Controller
+      - TruVu™ Compact BACnet Router
+      - TruVu™ Compact Link BACnet Integrator
+      - TruVu™ Isolated Network Router
+      - i-Vu XT Router
+      - i-Vu™ XT BACnet Link
+      - i-Vu™ XT Router
+      - iVu XT BACnet Link
+    - product: BACnet Gateway (B-GW)
+      lapsed: false
+      listed_products:
+      - TruVu™ Compact Link BACnet Integrator
+      - i-Vu™ XT BACnet Link
+    - product: BACnet Broadcast Management Device (B-BBMD)
+      lapsed: false
+      listed_products:
+      - Tru-Vu Advanced Application Controllers
+      - Tru-Vu Dual IP Programmable Zone Controller
+      - TruVu MPC Controller
+      - TruVu MPC Controller, non-routing
+      - TruVu MPC Processor
+      - TruVu Rooftop Controller
+      - TruVu WSHP Controller
+      - TruVu™ 683 Equipment Controller
+      - TruVu™ BACnet Advanced Application Controller
+      - TruVu™ Chilled Water System Optimizer
+      - TruVu™ ChillerVu™ Plant Controller
+      - TruVu™ Compact BACnet Router
+    signal_note: certified_products = one entry per BACnet DEVICE PROFILE with a BTL-listed product (the product
+      type); product names are context, never a count; current listing only (archives.php superseded listings not
+      read)
+    detected_by: sweep-building-automation.py
+    detected: '2026-10-15'
+  status: not-a-workflow
+  arazzo: null
+- slug: carrier-global-knx-association-manufacturer-members
+  label: KNX Association (manufacturer members)
+  partner_name: KNX Association (manufacturer members)
+  category: building automation
+  type: register
+  channel: standard-directory
+  evidence: https://www.knx.org/community/manufacturers
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: KNX Association manufacturer members (knx.org/community/manufacturers)
+    spec_file: null
+    standard: KNX (ISO/IEC 14543-3)
+    role: knx-manufacturer-member
+    registered_name: CARRIER SAS
+    website: https://www.carrier.com/commercial/en/eu
+    matched_domain: carrier.com
+    matched_by: domain+verified
+    signal_note: 'participation only: membership is not a product certification'
+    detected_by: sweep-building-automation.py
+    detected: '2026-10-15'
+  status: not-a-workflow
+  arazzo: null
+- slug: carrier-global-brick-consortium-commercial-members
+  label: Brick Consortium (commercial members)
+  partner: brick
+  partner_name: Brick Consortium (commercial members)
+  category: building data semantics
+  type: register
+  channel: standard-directory
+  evidence: https://brickschema.org/consortium/
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Brick Consortium members (brickschema.org/consortium)
+    spec_file: null
+    standard: Brick Schema
+    role: brick-commercial-member
+    registered_name: Carrier
+    website: https://www.carrier.com/
+    matched_domain: carrier.com
+    matched_by: domain+verified
+    signal_note: participation only
+    detected_by: sweep-building-automation.py
+    detected: '2026-10-15'
+  status: not-a-workflow
+  arazzo: null
