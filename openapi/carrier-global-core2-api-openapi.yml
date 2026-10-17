@@ -264,26 +264,13 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    SourceDataList:
-      type: object
-      description: List of Asset history objects
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceData'
-        total:
-          type: integer
-          example: 20
-          description: Total number of items that match the request
-        nextToken:
-          type: string
-          description: A pagination token used to return a set of results
-    SourceDataHistoryList:
+    UnifiedModelList:
       type: array
-      description: List of Asset history arrays
+      description: List of UnifiedModel objects
       items:
-        $ref: '#/components/schemas/SourceDataList'
+        oneOf:
+        - $ref: '#/components/schemas/UnifiedModelProperty'
+        - $ref: '#/components/schemas/UnifiedModelAlarm'
     UnifiedModelProperty:
       type: object
       required:
@@ -327,27 +314,6 @@ components:
           example: CelciusDegrees
           readOnly: false
           description: Measure unit
-    UnifiedModelList:
-      type: array
-      description: List of UnifiedModel objects
-      items:
-        oneOf:
-        - $ref: '#/components/schemas/UnifiedModelProperty'
-        - $ref: '#/components/schemas/UnifiedModelAlarm'
-    ForbiddenRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The API key doesn't have permissions to perform the request
-          example: Access to the requested resource is forbidden
-    UnexpectedError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Something went wrong on Stripe's end
-          example: Server Error
     UnifiedModelAlarm:
       type: object
       required:
@@ -377,6 +343,32 @@ components:
           example: Thermoking
           readOnly: false
           description: Alarm manufacturer
+    ForbiddenRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The API key doesn't have permissions to perform the request
+          example: Access to the requested resource is forbidden
+    UnexpectedError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Something went wrong on Stripe's end
+          example: Server Error
+    TooManyRequestsError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Too many requests hit the API too quickly. We recommend exponential backoff of your requests
+          example: Too Many Requests
+    SourceDataHistoryList:
+      type: array
+      description: List of Asset history arrays
+      items:
+        $ref: '#/components/schemas/SourceDataList'
     SourceData:
       type: object
       required:
@@ -421,20 +413,6 @@ components:
           type: object
           readOnly: false
           description: Array of alarm ids with their corresponding descriptions
-    BadRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The request was unacceptable, often due to missing a required parameter
-          example: No match found
-    TooManyRequestsError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Too many requests hit the API too quickly. We recommend exponential backoff of your requests
-          example: Too Many Requests
     AuthRequestError:
       type: object
       properties:
@@ -442,6 +420,28 @@ components:
           type: string
           description: No valid API key provided
           example: Unauthorized
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The request was unacceptable, often due to missing a required parameter
+          example: No match found
+    SourceDataList:
+      type: object
+      description: List of Asset history objects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceData'
+        total:
+          type: integer
+          example: 20
+          description: Total number of items that match the request
+        nextToken:
+          type: string
+          description: A pagination token used to return a set of results
   securitySchemes:
     x-lynx-api-key:
       type: apiKey
