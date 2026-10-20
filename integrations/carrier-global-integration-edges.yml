@@ -64,6 +64,36 @@ edges:
   seller_name: Carrier
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: Cloud Security Alliance STAR Registry
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://cloudsecurityalliance.org/star/registry/carrier-corporation/services/carrier-corporation
+  category: Cloud security assurance
+  contract_reference:
+    register: CSA STAR Registry (cloudsecurityalliance.org/star/registry)
+    spec_file: null
+    standard: CSA STAR
+    role: star-level-1
+    registered_name: Carrier Corporation
+    registry_id: carrier-corporation
+    service_url: https://www.corporate.carrier.com/
+    matched_domain: carrier.com
+    matched_by: domain+verified
+    identity_source: the service URL the organisation filed on its STAR listing (no lookup)
+    levels:
+    - STAR Level 1
+    certified_products: []
+    signal_note: STAR Level 1 (CAIQ self-assessment) = participation; certified_products = one entry per STAR Level
+      2 / STAR for AI Level 2 assessment TYPE (third-party certification, attestation, C-STAR, ValidAIted); lapsed
+      = every instance marked (Deprecated) by the registry; service counts never recorded
+    detected_by: sweep-compliance-assurance.py
+    detected: '2026-10-20'
+  detected_by: sweep-compliance-assurance.py
+  first_seen: '2026-10-20'
 - partner_name: ServiceTitan (own)
   partner: servicetitan
   partner_match: mirror
@@ -261,6 +291,8 @@ method: searched
 checked:
 - https://aws.amazon.com/marketplace/
 - https://brickschema.org/consortium/
+- https://cloudsecurityalliance.org/star/registry
+- https://eucoc.cloud/en/public-register/list-of-adherent-services
 - https://marketing.project-haystack.org/about-us
 - https://products.openadr.org/
 - https://www.bacnetinternational.net/btl/
