@@ -64,53 +64,6 @@ edges:
   seller_name: Carrier
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
-- partner_name: Cloud Security Alliance STAR Registry
-  partner: null
-  partner_match: register
-  type: register
-  channel: standard-directory
-  relationship: standard-participant
-  direction: partner-built
-  evidence: https://cloudsecurityalliance.org/star/registry/carrier-corporation/services/carrier-corporation
-  category: Cloud security assurance
-  contract_reference:
-    register: CSA STAR Registry (cloudsecurityalliance.org/star/registry)
-    spec_file: null
-    standard: CSA STAR
-    role: star-level-1
-    registered_name: Carrier Corporation
-    registry_id: carrier-corporation
-    service_url: https://www.corporate.carrier.com/
-    matched_domain: carrier.com
-    matched_by: domain+verified
-    identity_source: the service URL the organisation filed on its STAR listing (no lookup)
-    levels:
-    - STAR Level 1
-    certified_products: []
-    signal_note: STAR Level 1 (CAIQ self-assessment) = participation; certified_products = one entry per STAR Level
-      2 / STAR for AI Level 2 assessment TYPE (third-party certification, attestation, C-STAR, ValidAIted); lapsed
-      = every instance marked (Deprecated) by the registry; service counts never recorded
-    detected_by: sweep-compliance-assurance.py
-    detected: '2026-10-20'
-  detected_by: sweep-compliance-assurance.py
-  first_seen: '2026-10-20'
-- partner_name: ServiceTitan (own)
-  partner: servicetitan
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://marketplace.servicetitan.com/partner/carrier
-  mirror_of: servicetitan/integrations/servicetitan-integration-edges.yml
-  apps:
-  - Carrier
-  listing_count: 1
-  detected: '2026-10-14'
-  detected_by: mirror-platform-listings.py
-  category: Suppliers, Catalogs & Pricebooks, Leads & Bookings
 - partner_name: BACnet Testing Laboratories (BTL Listed)
   partner: null
   partner_match: register
@@ -213,7 +166,7 @@ edges:
       type); product names are context, never a count; current listing only (archives.php superseded listings not
       read)
     detected_by: sweep-building-automation.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   detected_by: sweep-building-automation.py
   first_seen: '2026-10-15'
 - partner_name: BACnet Testing Laboratories (BTL Listed)
@@ -237,7 +190,7 @@ edges:
     registered_name: Carrier Corporation
     matched_domain: carrier.com
     detected_by: sweep-building-automation.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   detected_by: sweep-building-automation.py
   first_seen: '2026-10-15'
 - partner_name: KNX Association (manufacturer members)
@@ -260,7 +213,7 @@ edges:
     matched_by: domain+verified
     signal_note: 'participation only: membership is not a product certification'
     detected_by: sweep-building-automation.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   detected_by: sweep-building-automation.py
   first_seen: '2026-10-15'
 - partner_name: Brick Consortium (commercial members)
@@ -283,9 +236,162 @@ edges:
     matched_by: domain+verified
     signal_note: participation only
     detected_by: sweep-building-automation.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   detected_by: sweep-building-automation.py
   first_seen: '2026-10-15'
+- partner_name: ServiceTitan (own)
+  partner: servicetitan
+  partner_match: mirror
+  mirror_match: domain+verified
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.servicetitan.com/partner/carrier
+  mirror_of: servicetitan/integrations/servicetitan-integration-edges.yml
+  apps:
+  - Carrier
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Suppliers, Catalogs & Pricebooks, Leads & Bookings
+- partner_name: Cloud Security Alliance STAR Registry
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://cloudsecurityalliance.org/star/registry/carrier-corporation/services/carrier-corporation
+  category: Cloud security assurance
+  contract_reference:
+    register: CSA STAR Registry (cloudsecurityalliance.org/star/registry)
+    spec_file: null
+    standard: CSA STAR
+    role: star-level-1
+    registered_name: Carrier Corporation
+    registry_id: carrier-corporation
+    service_url: https://www.corporate.carrier.com/
+    matched_domain: carrier.com
+    matched_by: domain+verified
+    identity_source: the service URL the organisation filed on its STAR listing (no lookup)
+    levels:
+    - STAR Level 1
+    certified_products: []
+    signal_note: STAR Level 1 (CAIQ self-assessment) = participation; certified_products = one entry per STAR Level
+      2 / STAR for AI Level 2 assessment TYPE (third-party certification, attestation, C-STAR, ValidAIted); lapsed
+      = every instance marked (Deprecated) by the registry; service counts never recorded
+    detected_by: sweep-compliance-assurance.py
+    detected: '2026-10-20'
+  detected_by: sweep-compliance-assurance.py
+  first_seen: '2026-10-20'
+- partner_name: US EPA ENERGY STAR
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://data.energystar.gov/d/8wj2-sec8
+  category: ENERGY STAR product certification
+  contract_reference:
+    register: ENERGY STAR Model Index, all currently certified models (data.energystar.gov/resource/8wj2-sec8)
+    standard: ENERGY STAR (US EPA product specifications)
+    spec_file: null
+    role: energy-star-partner
+    registered_name: Carrier Corporation
+    register_id: https://data.energystar.gov/d/8wj2-sec8
+    matched_domain: carrier.com
+    matched_by: domain+verified
+    certified_products:
+    - product: Central Air Conditioners and Air Source Heat Pumps
+      product_type: Central Air Conditioners and Air Source Heat Pumps
+      lapsed: false
+      brands:
+      - ACIQ
+      - Airquest
+      - Arcoaire
+      - BROCK
+      - BRYANT HEATING AND COOLING SYSTEMS
+      - Bryant
+      - Bryant Heating & Cooling Systems
+      - Carrier
+      - Comfortmaker
+      - Day & Night
+      first_certified: '2023-03-15'
+    - product: Furnaces
+      product_type: Furnaces
+      lapsed: false
+      brands:
+      - ACIQ
+      - Airquest
+      - Arcoaire
+      - BROCK
+      - Bryant
+      - Carrier
+      - Comfortmaker
+      - Day & Night
+      - ECOTEMP
+      - Grandaire
+      first_certified: '2023-08-04'
+    - product: Geothermal Heat Pumps
+      product_type: Geothermal Heat Pumps
+      lapsed: false
+      brands:
+      - Arcoaire
+      - Bryant
+      - Carrier
+      - Comfortmaker
+      - Day & Night
+      - Heil
+      - Keeprite
+      - Tempstar
+      first_certified: '2021-11-09'
+    - product: Light Commercial HVAC
+      product_type: Light Commercial HVAC
+      lapsed: false
+      brands:
+      - ACIQ
+      - Airquest
+      - Arcoaire
+      - BROCK
+      - BRYANT HEATING AND COOLING SYSTEMS
+      - Bryant Heating & Cooling Systems
+      - Carrier
+      - Comfortmaker
+      - Day & Night
+      - Heil
+      first_certified: '2024-01-04'
+    - product: Smart Thermostats
+      product_type: Smart Thermostats
+      lapsed: false
+      connected: true
+      source_note: certified model in the category dataset; not (yet) in the Model Index
+      connected_protocols:
+      - Bluetooth
+      - Other
+      - Wi-Fi
+      demand_response:
+      - Carrier Smart Thermostats support DR via OpenADR 2.0 and meet CA Energy Commission requirements. We support
+        DR programs in CAISO, ERCOT, NYISO and PJM. Events a
+      - ENERGY STAR Program Requirements, Product Specification for CT Thermostat Products, V 1.0.  Eligibility
+        Criteria Demand Response Capabilities Summary descriptio
+      - 'The thermostat is certified under OpenADR Profile 2.0b.  The thermostat is also part of a system that meets
+        AHRI 1380 requirements with specified outdoor units '
+    connected_product_types:
+    - Smart Thermostats
+    signal_note: 'certified_products = ONE entry per ENERGY STAR product category with a currently certified model
+      (the Model Index lists current certifications only, so lapsed is False; delisted models drop out); connected:
+      true where the category''s dataset flags connected / network capability for this partner''s models (Smart
+      Thermostats and Connected lighting are connected by definition). Brands are context; model counts are never
+      counted.'
+    detected_by: sweep-energy-star-certified-products.py
+    detected: '2026-10-22'
+    identity: wikidata Q731912 'Carrier Corporation' P856 https://www.corporate.carrier.com
+    identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
+  detected_by: sweep-energy-star-certified-products.py
+  first_seen: '2026-10-22'
 generated: '2026-10-13'
 method: searched
 checked:
@@ -298,6 +404,9 @@ checked:
 - https://www.bacnetinternational.net/btl/
 - https://www.knx.org/community/manufacturers
 - servicetitan/integrations/servicetitan-integration-edges.yml
+- https://data.energystar.gov/api/views/metadata/v1
+- https://data.energystar.gov/resource/8wj2-sec8.json
+- https://www.energystar.gov/productfinder/
 marketplace_apps: []
 source:
 - servicetitan/integrations/servicetitan-integration-edges.yml
