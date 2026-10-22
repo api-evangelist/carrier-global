@@ -392,6 +392,44 @@ edges:
     identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
   detected_by: sweep-energy-star-certified-products.py
   first_seen: '2026-10-22'
+- partner_name: CVE Program (CVE Numbering Authorities)
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://www.cve.org/PartnerInformation/ListofPartners/partner/Carrier
+  category: Vulnerability disclosure (CVE Numbering Authority)
+  contract_reference:
+    register: CVE Program CNA list (github.com/CVEProject/cve-website CNAsList.json @ 239d3d9b68e0)
+    standard: CVE Program CNA Operational Rules (CVE Numbering Authority)
+    spec_file: null
+    role: cve-numbering-authority
+    registered_name: Carrier Global Corporation
+    matched_domain: carrier.com
+    matched_by: domain
+    cna_id: CNA-2021-0054
+    cna_short_name: Carrier
+    cna_types:
+    - Hosted Service
+    - Vendor
+    cna_roles:
+    - CNA
+    scope: Carrier Global products only.
+    top_level_root: Cybersecurity and Infrastructure Security Agency (CISA)
+    root: Cybersecurity and Infrastructure Security Agency (CISA) Industrial Control Systems (ICS)
+    security_advisories:
+    - https://www.corporate.carrier.com/product-security/advisories-resources/
+    disclosure_policy:
+    - https://www.corporate.carrier.com/product-security/reporting-response-disclosures/
+    country: USA
+    signal_note: listing as a CVE Numbering Authority = participation (a public commitment to assign CVE IDs and
+      publish advisories for its scope); never a count of CVEs
+    detected_by: sweep-vulnerability-disclosure-cna.py
+    detected: '2026-10-22'
+  detected_by: sweep-vulnerability-disclosure-cna.py
+  first_seen: '2026-10-22'
 generated: '2026-10-13'
 method: searched
 checked:
@@ -407,6 +445,9 @@ checked:
 - https://data.energystar.gov/api/views/metadata/v1
 - https://data.energystar.gov/resource/8wj2-sec8.json
 - https://www.energystar.gov/productfinder/
+- https://api.first.org/data/v1/teams
+- https://raw.githubusercontent.com/CVEProject/cve-website/dev/src/assets/data/CNAsList.json
+- https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json
 marketplace_apps: []
 source:
 - servicetitan/integrations/servicetitan-integration-edges.yml
