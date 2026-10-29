@@ -1,4 +1,4 @@
-# Carrier Global (carrier-global)
+# Carrier Global
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,213 +66,145 @@
 
 Carrier Global Corporation is a global provider of healthy, safe, sustainable, and intelligent building and cold-chain solutions, spanning HVAC, refrigeration, fire, security, and building automation technologies. Its digital ecosystem includes the Lynx Fleet telematics platform (Lynx APIs for transport refrigeration units and marine containers), the Abound building management platform, i-Vu and Carrier Comfort Network for commercial building automation, and the Carrier SmartHome app for residential smart thermostats. Lynx Fleet is the only Carrier product publishing machine-readable API contracts: three OpenAPI 3.0.0 documents covering 16 operations across truck/trailer telematics, two-way refrigeration control and container telemetry, served through the developer portal's public GraphQL backend rather than as static files.
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/carrier-global/refs/heads/main/apis.yml)
+**Areas:** HVAC · Cold Chain · Telematics · Building Automation · IoT · Refrigeration · Fortune 500
 
-## Scope
+## Carrier Global on APIs.io
 
-- **Type:** Index
-- **Position:** Producing
-- **Access:** Partner
+Everything profiled for Carrier Global is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/carrier-global/](https://apis.io/providers/carrier-global/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (7)
 
- - HVAC, Cold Chain, Telematics, Building Automation, IoT, Refrigeration, Fortune 500
+- [Carrier Lynx Dev Portal GraphQL](https://apis.io/apis/carrier-global/lynx-portal-graphql/) — The GraphQL backend behind the Lynx Fleet Dev Portal. Its /public/graphql endpoint answers anonymously and is the only way to reach Carrier's API contracts…
+- [Carrier i-Vu Building Automation](https://apis.io/apis/carrier-global/i-vu-building-automation/) — i-Vu is Carrier's web-based commercial building automation system for monitoring and controlling HVAC, lighting, and related building systems. It integrates…
+- [Carrier Comfort Network](https://apis.io/apis/carrier-global/carrier-comfort-network/) — Carrier Comfort Network (CCN) is Carrier's proprietary control and communication network for tying together chillers, air handlers, and related HVAC…
+- [Carrier Abound](https://apis.io/apis/carrier-global/abound-building-platform/) — Abound is Carrier's cloud-based building intelligence platform that aggregates data from HVAC, IAQ sensors, and occupancy systems to provide…
+- [Carrier SmartHome App](https://apis.io/apis/carrier-global/carrier-smarthome/) — The Carrier SmartHome app lets homeowners remotely control Carrier connected smart thermostats and residential HVAC equipment. No public developer API is…
+- [Carrier Global Core API](https://apis.io/apis/carrier-global/carrier-global-core-api/) — The core API from Carrier Global — 13 operation(s) for core.
+- [Carrier Global Core2 API](https://apis.io/apis/carrier-global/carrier-global-core2-api/) — The Core2 API from Carrier Global — 3 operation(s) for core2.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-03-21
-- **Modified:** 2026-09-05
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### AsyncAPI (1)
 
-### Carrier Lynx Fleet API
+Event-driven and webhook contracts.
 
-REST API surface exposing Lynx Fleet telematics data for diesel and electric transport refrigeration units (TRUs). Ten operations covering asset inventory, latest-state snapshots, asset and multi-asset history, battery state and battery history, the alarm-code dictionary, and two ingestion endpoints for third-party sensor (SCB) and Orbcomm telematics payloads. Cursor paginated with limit and nextToken, authenticated with a tenant API key in the x-lynx-api-key header.
+- [Carrier Global Lynx Webhooks](https://apis.io/asyncapis/carrier-global/carrier-global-lynx-webhooks/)
 
-**Human URL:** [https://doc-api.fleet.lynx.carrier.io/](https://doc-api.fleet.lynx.carrier.io/)
+#### MCP servers (1)
 
-**Base URL:** `https://api.fleet.lynx.carrier.io`
+Model Context Protocol servers that expose the API to agents.
 
-#### Tags
+- [Carrier Lynx Fleet MCP (candidate)](https://apis.io/servers/carrier-global/carrier-lynx-fleet-mcp-candidate/)
 
- - Cold Chain, Telematics, Fleet, Refrigeration, IoT
+#### JSON-LD (1)
 
-#### Properties
+Linked-data contexts for the provider's vocabulary.
 
-- [OpenAPI](openapi/carrier-global-lynx-fleet-api-openapi.yaml)
-- [Overlay](overlays/carrier-global-lynx-fleet-api-overlay.yaml)
-- [Documentation](https://doc-api.fleet.lynx.carrier.io/)
-- [API Reference](https://api.tta.lynxfleet.carrier.com/apis)
-- [Portal](https://api.tta.lynxfleet.carrier.com/)
-- [Getting Started](https://doc-api.fleet.lynx.carrier.io/api-documentation)
-- [Terms of Service](https://www.carrier.com/lynx/terms-of-use)
-- [Products](https://api.tta.lynxfleet.carrier.com/products)
+- [Carrier Global Context](https://apis.io/jsonld/carrier-global/carrier-global-context/)
 
-### Carrier Lynx 2-way Command API
+#### Overlays (3)
 
-Remote-control surface for Lynx-connected transport refrigeration units. Three operations: list the commands a given asset supports, send one or more commands, and check the status of a dispatched command by commandId. Commands include per-compartment setpoints in the range -30 to 35 °C, compartment toggles, defrost initiation, pre-trip initiation, alarm clearing, run mode, sleep mode, TRU power and Intelliset selection. This is physical actuation: Carrier publishes no idempotency key, no dry-run mode and no reversal operation for it.
+OpenAPI overlays, including conversational phrasing for each operation.
 
-**Human URL:** [https://doc-api.fleet.lynx.carrier.io/](https://doc-api.fleet.lynx.carrier.io/)
+- [Carrier Global Lynx 2Way Command Api Overlay](https://apis.io/overlays/carrier-global/carrier-global-lynx-2way-command-api-overlay/)
+- [Carrier Global Lynx Container Api Overlay](https://apis.io/overlays/carrier-global/carrier-global-lynx-container-api-overlay/)
+- [Carrier Global Lynx Fleet Api Overlay](https://apis.io/overlays/carrier-global/carrier-global-lynx-fleet-api-overlay/)
 
-**Base URL:** `https://api.fleet.lynx.carrier.io/2waycmd`
+#### Security (3)
 
-#### Tags
+Authentication, trust centre, and vulnerability disclosure.
 
- - Cold Chain, Refrigeration, Remote Control, Telematics, IoT
+- [Carrier Global Authentication](https://apis.io/security/carrier-global/carrier-global-authentication/)
+- [Carrier Global Domain Security](https://apis.io/security/carrier-global/carrier-global-domain-security/)
+- [Carrier Global Vulnerability Disclosure](https://apis.io/security/carrier-global/carrier-global-vulnerability-disclosure/)
 
-#### Properties
+#### Plans and pricing (1)
 
-- [OpenAPI](openapi/carrier-global-lynx-2way-command-api-openapi.yaml)
-- [Overlay](overlays/carrier-global-lynx-2way-command-api-overlay.yaml)
-- [Documentation](https://doc-api.fleet.lynx.carrier.io/)
-- [API Reference](https://api.tta.lynxfleet.carrier.com/apis)
+Published plans, tiers and prices.
 
-### Carrier Lynx Container API
+- [Carrier Global Plans Pricing](https://apis.io/plans/carrier-global/carrier-global-plans-pricing/)
 
-Telemetry surface for Carrier-managed marine and intermodal refrigerated containers, published as a separate contract with its own data model. Three operations: the container Unified Model property and alarm definitions, latest source data, and container asset history. Shares the x-lynx-api-key authentication, the error envelope and the monthly call quota with the fleet API, but shares none of its schemas.
+#### Rate limits (1)
 
-**Human URL:** [https://doc-api.fleet.lynx.carrier.io/](https://doc-api.fleet.lynx.carrier.io/)
+Published request limits.
 
-**Base URL:** `https://api.fleet.lynx.carrier.io/coa`
+- [Carrier Global Rate Limits](https://apis.io/rate-limits/carrier-global/carrier-global-rate-limits/)
 
-#### Tags
+#### FinOps (1)
 
- - Cold Chain, Container, Telematics, Refrigeration, IoT
+What the API costs to run, by operation.
 
-#### Properties
+- [Carrier Global Finops](https://apis.io/finops/carrier-global/carrier-global-finops/)
 
-- [OpenAPI](openapi/carrier-global-lynx-container-api-openapi.yaml)
-- [Overlay](overlays/carrier-global-lynx-container-api-overlay.yaml)
-- [Documentation](https://doc-api.fleet.lynx.carrier.io/)
-- [API Reference](https://api.tta.lynxfleet.carrier.com/apis)
+## Where to find this API
 
-### Carrier Lynx Dev Portal GraphQL
-
-The GraphQL backend behind the Lynx Fleet Dev Portal. Its /public/graphql endpoint answers anonymously and is the only way to reach Carrier's API contracts and integration guides in machine-readable form — the docs host is a single-page app that returns an HTML shell for every conventional spec path. Verified queries: getDefaultProducts (the product catalogue), getPublicApiSpecYml and getPublicApiSpecJson (the OpenAPI documents), and getPublicProductInfo (contract plus structured guide). Introspection is disabled.
-
-**Human URL:** [https://doc-api.fleet.lynx.carrier.io/](https://doc-api.fleet.lynx.carrier.io/)
-
-**Base URL:** `https://api.portal.fleet.lynx.carrier.io/public/graphql`
-
-#### Tags
-
- - GraphQL, Developer Portal, Discovery
-
-#### Properties
-
-- [GraphQL](graphql/carrier-global-lynx-portal-graphql.yml)
-- [Documentation](https://doc-api.fleet.lynx.carrier.io/)
-
-### Carrier i-Vu Building Automation
-
-i-Vu is Carrier's web-based commercial building automation system for monitoring and controlling HVAC, lighting, and related building systems. It integrates with BACnet and other standard building protocols rather than a public REST API surface.
-
-**Human URL:** [https://www.carrier.com/commercial/en/us/products/controls/building-automation/](https://www.carrier.com/commercial/en/us/products/controls/building-automation/)
-
-#### Tags
-
- - Building Automation, BACnet, HVAC
-
-#### Properties
-
-- [Documentation](https://www.carrier.com/commercial/en/us/products/controls/building-automation/)
-
-### Carrier Comfort Network
-
-Carrier Comfort Network (CCN) is Carrier's proprietary control and communication network for tying together chillers, air handlers, and related HVAC equipment, typically integrated into BMS/BAS deployments.
-
-**Human URL:** [https://www.carrier.com/commercial/en/us/products/controls/carrier-comfort-network/](https://www.carrier.com/commercial/en/us/products/controls/carrier-comfort-network/)
-
-#### Tags
-
- - Building Automation, HVAC, Chillers
-
-#### Properties
-
-- [Documentation](https://www.carrier.com/commercial/en/us/products/controls/carrier-comfort-network/)
-
-### Carrier Abound
-
-Abound is Carrier's cloud-based building intelligence platform that aggregates data from HVAC, IAQ sensors, and occupancy systems to provide indoor-environmental-quality analytics, energy insights, and healthy-building dashboards for commercial real estate operators.
-
-**Human URL:** [https://abound.carrier.com](https://abound.carrier.com)
-
-#### Tags
-
- - Building Intelligence, IAQ, Analytics
-
-#### Properties
-
-- [Documentation](https://abound.carrier.com)
-
-### Carrier SmartHome App
-
-The Carrier SmartHome app lets homeowners remotely control Carrier connected smart thermostats and residential HVAC equipment. No public developer API is currently published; integration is via the consumer mobile app and connected thermostat web portals.
-
-**Human URL:** [https://www.carrier.com/residential/en/us/products/thermostats/](https://www.carrier.com/residential/en/us/products/thermostats/)
-
-#### Tags
-
- - Smart Home, Thermostats, Residential
-
-#### Properties
-
-- [Documentation](https://www.carrier.com/residential/en/us/products/thermostats/)
-
-## Use Cases
-
-- Cold-chain compliance and pharmaceutical or food logistics where carriers pull real-time TRU temperature, door events, alarms and GPS into an existing TMS through the Lynx Fleet API.
-- Two-way fleet command and control where dispatchers remotely change a setpoint, initiate defrost or pre-trip, or power a refrigeration unit in response to a route or load change.
-- Marine and intermodal container telemetry through the separate Lynx Container API, including Pre-Trip Inspection and TripWise data.
-- Battery health monitoring across a trailer fleet, using the asset-battery and battery-history operations.
-- Alarm triage, resolving codes seen on assets against the published alarm-code dictionary.
-- Indoor environmental quality analytics and healthy-building scoring for commercial real estate operators using Abound building telemetry (no public contract).
-- Commercial HVAC scheduling, trending and alarm routing through i-Vu for multi-site building operators (BACnet integration, no public REST contract).
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.corporate.carrier.com)
-- [Consumer Site](https://www.carrier.com/us/en/)
-- [LinkedIn](https://www.linkedin.com/company/carrier)
-- [Lynx Fleet Dev Portal](https://doc-api.fleet.lynx.carrier.io/)
-- [Lynx Fleet Developer Portal](https://api.tta.lynxfleet.carrier.com/)
-- [API Reference](https://api.tta.lynxfleet.carrier.com/apis)
-- [Getting Started](https://doc-api.fleet.lynx.carrier.io/api-documentation)
-- [Lynx Fleet Developer Portal sign in](https://api.tta.lynxfleet.carrier.com/signin)
+- [Documentation](https://doc-api.fleet.lynx.carrier.io/)
+- [Getting started](https://doc-api.fleet.lynx.carrier.io/api-documentation)
+- [API reference](https://api.tta.lynxfleet.carrier.com/apis)
+- [Sign up](https://api.tta.lynxfleet.carrier.com/signin)
 - [Support](https://www.corporate.carrier.com/contact-us/)
-- [Carrier News](https://www.corporate.carrier.com/news/)
-- [Terms of Service](https://www.corporate.carrier.com/legal/terms-of-use/)
-- [Privacy Policy](https://www.corporate.carrier.com/legal/privacy-notice/)
-- [Carrier PSIRT — report a vulnerability](https://www.carrier.com/us/en/product-security/report-an-issue.html)
-- [Carrier Product and Software Security Assurance](https://www.carrier.com/us/en/product-security.html)
-- [Authentication](authentication/carrier-global-authentication.yml)
-- [Conventions](conventions/carrier-global-conventions.yml)
-- [Error Catalog](errors/carrier-global-problem-types.yml)
-- [Lifecycle](lifecycle/carrier-global-lifecycle.yml)
-- [Conformance](conformance/carrier-global-conformance.yml)
-- [Data Model](data-model/carrier-global-data-model.yml)
-- [Rate Limits](rate-limits/carrier-global-rate-limits.yml)
-- [Plans](plans/carrier-global-plans-pricing.yml)
-- [FinOps](finops/carrier-global-finops.yml)
-- [Vocabulary](vocabulary.yml)
-- [Lynx Fleet Dev Portal interactive API console](sandbox/carrier-global-sandbox.yml)
-- [Lynx Push API (documented webhook surface)](asyncapi/carrier-global-lynx-webhooks.yml)
-- [Packages](packages/carrier-global-packages.yml)
-- [Agent Skills](skills/_index.yml)
-- [Tool Crosswalk](mcp/carrier-global-tool-crosswalk.yml)
-- [MCP Server (candidate — no server exists)](mcp/carrier-global-mcp.yml)
-- [Well-Known Probe](well-known/carrier-global-well-known.yml)
-- [Domain Security](security/carrier-global-domain-security.yml)
-- [Vulnerability Disclosure](security/carrier-global-vulnerability-disclosure.yml)
-- [llms.txt](llms/carrier-global-llms.txt)
-- [Investor Relations](https://ir.carrier.com)
-- [Careers](https://www.corporate.carrier.com/careers/)
-- [Contact](https://www.corporate.carrier.com/contact-us/)
-- [JSON-LD Context](json-ld/carrier-global-context.jsonld)
-- [Spectral Rules](spectral/carrier-global.spectral.yml)
+- [Blog](https://www.corporate.carrier.com/news/)
+- [Security](https://www.carrier.com/us/en/product-security/report-an-issue.html)
+- [Compliance](https://www.carrier.com/us/en/product-security.html)
+- [Terms of service](https://www.corporate.carrier.com/legal/terms-of-use/)
+- [Privacy policy](https://www.corporate.carrier.com/legal/privacy-notice/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
+**Kin Score 53.0** — developing · rubric 0.25.0 · scored 2026-10-23
 
-**Email:** info@apievangelist.com
+| Facet | Score |
+|---|---|
+| Discoverability | 69.6 |
+| Contract quality | 62.3 |
+| Contract governance | 18.2 |
+| Operational transparency | 39.5 |
+| Developer ergonomics | 54.2 |
+| Access clarity | 50.0 |
+
+**Agent readiness 43.0** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 35.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/carrier-global/](https://apis.io/providers/carrier-global/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Carrier Global: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/carrier-global/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
