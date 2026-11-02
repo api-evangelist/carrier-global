@@ -1,0 +1,124 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Carrier Global
+providerId: carrier-global
+created: '2026-05-04'
+# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
+# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
+method: generated
+modified: '2026-05-05'
+reconciled: false
+tags:
+  - HVAC
+  - Cold Chain
+  - Telematics
+  - Building Automation
+  - IoT
+  - Refrigeration
+  - Fortune 500
+description: Carrier Global is a Fortune 500 HVAC, refrigeration, fire, security, and building-automation
+  company. Its digital ecosystem (Lynx Fleet, Abound, i-Vu, Carrier Comfort Network, Carrier SmartHome)
+  exposes APIs to fleet operators, building owners, and integrators under product-license and partner
+  agreements. Carrier does not publish standalone API pricing; access is bundled with the underlying
+  hardware/SaaS subscription.
+notes: No public API pricing exists. API access is included with the corresponding Carrier digital subscription
+  (Lynx, Abound, i-Vu, etc.); reconcile against the customer's specific product agreement.
+sources:
+  - https://www.corporate.carrier.com/
+  - https://doc-api.fleet.lynx.carrier.io/
+plans:
+  - id: carrier-lynx-fleet
+    name: Lynx Fleet (TRU Telematics)
+    type: subscription
+    description: Lynx Fleet telematics subscription for transport refrigeration units (TRUs); API access
+      bundled with the per-asset subscription. Pricing is contact-sales.
+    entries:
+      - label: Per-asset subscription
+        name: lynx_asset
+        type: subscription
+        metric: asset
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: contact sales
+        userMultiplied: false
+    elements:
+      - name: Carrier Lynx Fleet API
+      - name: TRU Setpoints, Temperatures, Alarms, GPS
+      - name: Two-Way Refrigeration Commands
+  - id: carrier-abound
+    name: Abound (Building Management)
+    type: enterprise
+    description: Abound healthy-building platform; API access bundled with the building/portfolio license.
+      Pricing is contact-sales.
+    entries:
+      - label: Building license
+        name: abound_building
+        type: subscription
+        metric: building
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: contact sales
+        userMultiplied: false
+    elements:
+      - name: Abound Platform
+      - name: Indoor Air Quality and Occupancy Telemetry
+      - name: Building Operations Workflows
+  - id: carrier-commercial-controls
+    name: i-Vu / Carrier Comfort Network
+    type: enterprise
+    description: Commercial building automation controls; integrator access via product license. Pricing
+      is contact-sales / quoted via Carrier dealer network.
+    entries:
+      - label: Controls license
+        name: controls_license
+        type: subscription
+        metric: site
+        limit: -1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: contact dealer
+        userMultiplied: false
+    elements:
+      - name: i-Vu Building Automation
+      - name: Carrier Comfort Network
+maintainers:
+  - FN: Kin Lane
+    email: info@apievangelist.com
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - subscription
+  units:
+  - object
+  plans:
+  - name: Lynx Fleet (TRU Telematics)
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - other
+    periods:
+    - month
+  - name: Abound (Building Management)
+    access: enterprise
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: i-Vu / Carrier Comfort Network
+    access: enterprise
+    model: subscription
+    model_how: derived
+    units:
+    - object
+    periods:
+    - year
