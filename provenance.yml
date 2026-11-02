@@ -29,6 +29,9 @@ artifacts:
   graphql/carrier-global-lynx-portal-graphql.yml:
     method: unknown
     evidence: no authorship recorded
+  heartbeat/2026-11-02.yml:
+    method: unknown
+    evidence: no authorship recorded
   integrations/_index.yml:
     method: generated
     evidence: carries an API Evangelist house phrase
@@ -41,7 +44,7 @@ artifacts:
   kin/checks-2026-10-23T222754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  kin/checks-2026-10-31T095417.yml:
+  kin/checks-2026-11-02T082323.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-23T000603.yml:
@@ -98,6 +101,15 @@ artifacts:
   kin/score-2026-10-31T095417.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-01T171331.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-01T200237.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-02T082323.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/carrier-global-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
@@ -143,11 +155,17 @@ artifacts:
   packages/carrier-global-packages.yml:
     method: searched
     evidence: declared in the artifact
+  patterns/carrier-global-patterns.yml:
+    method: derived
+    evidence: declared in the artifact
   plans/carrier-global-plans-pricing.yml:
     method: generated
     evidence: declared in the artifact
   rate-limits/carrier-global-rate-limits.yml:
     method: searched
+    evidence: declared in the artifact
+  rules/carrier-global-rules.yml:
+    method: generated
     evidence: declared in the artifact
   sandbox/carrier-global-sandbox.yml:
     method: searched
@@ -171,6 +189,9 @@ artifacts:
     method: generated
     evidence: declared in the artifact
   skills/carrier-global-send-refrigeration-command.md:
+    method: generated
+    evidence: declared in the artifact
+  sla/carrier-global-sla.yml:
     method: generated
     evidence: declared in the artifact
   spectral/carrier-global.spectral.yml:
